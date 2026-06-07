@@ -58,6 +58,8 @@ This workspace now includes a Cloudflare Worker proxy and deployment scaffolding
 
 The frontend automatically uses direct third-party endpoints when opened via `file://` locally, and switches to relative `/api/proxy/*` endpoints when hosted over HTTP(S).
 
+Deployment trigger after Worker path update.
+
 ## Recommended next steps
 
 1. Wire the generate action to the Python isochrone engine and an agreed routing source.
