@@ -27,7 +27,7 @@ export default {
     }
 
     if (url.pathname.startsWith("/api/proxy/")) {
-      return handleProxyRequest(request, url);
+      return handleProxyRequest(request, url, env);
     }
 
     if (env.ASSETS) {
@@ -62,9 +62,13 @@ export default {
   },
 };
 
-async function handleProxyRequest(request, url) {
+async function handleProxyRequest(request, url, env) {
   if (url.pathname === "/api/proxy/overpass") {
     return proxyOverpass(request);
+  }
+
+  if (url.pathname.startsWith("/api/proxy/otp/")) {
+    return proxyOtpRequest(request, url, env);
   }
 
   if (url.pathname.startsWith("/api/proxy/valhalla/")) {
@@ -96,6 +100,19 @@ async function handleProxyRequest(request, url) {
   }
 
   return jsonResponse({ error: "Unknown proxy path." }, 404);
+}
+
+async function proxyOtpRequest(request, url, env) {
+  if (!env.OTP_API_BASE_URL) {
+    return jsonResponse({ error: "OTP_API_BASE_URL is not configured." }, 503);
+  }
+
+  const baseUrl = env.OTP_API_BASE_URL.replace(/\/+$/, "");
+  const targetPath = url.pathname.replace("/api/proxy/otp/", "");
+  return proxyGenericRequest(
+    request,
+    `${baseUrl}/${targetPath}${url.search}`
+  );
 }
 
 async function proxyOverpass(request) {
@@ -136,17 +153,30 @@ async function proxyOverpass(request) {
 }
 
 async function proxyGenericRequest(request, targetUrl, options = {}) {
-  const init = {
-    method: request.method,
-    headers: filterRequestHeaders(request.headers, options.headers),
-  };
+  try {
+    const init = {
+      method: request.method,
+      headers: filterRequestHeaders(request.headers, options.headers),
+    };
 
-  if (request.method !== "GET" && request.method !== "HEAD") {
-    init.body = await request.text();
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      init.body = await request.text();
+    }
+
+    const response = await fetch(targetUrl, init);
+    return copyProxyResponse(response);
+  } catch (error) {
+    return jsonResponse(
+      {
+        error: "Proxy request failed.",
+        details: {
+          targetUrl,
+          message: String(error),
+        },
+      },
+      502
+    );
   }
-
-  const response = await fetch(targetUrl, init);
-  return copyProxyResponse(response);
 }
 
 function filterRequestHeaders(sourceHeaders, extraHeaders = {}) {
