@@ -51,6 +51,24 @@ const AMENITY_COLOR_PALETTE = [
   "#c2410c",
   "#0ea5e9",
   "#a855f7",
+  "#0891b2",
+  "#b91c1c",
+  "#15803d",
+  "#b45309",
+  "#6d28d9",
+  "#047857",
+  "#9d174d",
+  "#4338ca",
+  "#65a30d",
+  "#ea580c",
+  "#0369a1",
+  "#9333ea",
+  "#0e7490",
+  "#be185d",
+  "#1d4ed8",
+  "#a16207",
+  "#166534",
+  "#7e22ce",
 ];
 const DEFAULT_SITE_COORDINATES = "53.801672, -1.548567";
 const DEFAULT_ACCESS_COORDINATES = "53.801155, -1.547860";
@@ -2440,7 +2458,7 @@ function selectAmenitiesFromGroupedResults(grouped, mode) {
           .slice(0, categoryLimit);
     selectedItems
       .forEach((item, categoryItemIndex) => {
-        const markerStyle = getAmenityMarkerStyle(category, selected.length, categoryItemIndex);
+        const markerStyle = getAmenityMarkerStyle(item, category);
         item.id = selected.length + 1;
         item.symbol = markerStyle.symbol;
         item.color = markerStyle.color;
@@ -2758,14 +2776,24 @@ function bearingToCardinal(bearing) {
   return directions[index];
 }
 
-function getAmenityMarkerStyle(category, globalIndex, categoryIndex) {
+function getAmenityMarkerStyle(item, category) {
   const symbol = CATEGORY_SYMBOLS[category] ?? "circle";
   const categoryOffset = CATEGORY_OPTIONS.indexOf(category);
-  const color = AMENITY_COLOR_PALETTE[(categoryOffset * 3 + categoryIndex * 5 + globalIndex) % AMENITY_COLOR_PALETTE.length];
+  const stableKey = item?.sourceId || `${category}|${item?.name || ""}`;
+  const colorIndex = positiveHash(`${categoryOffset}|${stableKey}`) % AMENITY_COLOR_PALETTE.length;
+  const color = AMENITY_COLOR_PALETTE[colorIndex];
   return {
     symbol,
     color,
   };
+}
+
+function positiveHash(value) {
+  let hash = 0;
+  String(value).split("").forEach((character) => {
+    hash = (hash * 31 + character.charCodeAt(0)) >>> 0;
+  });
+  return hash;
 }
 
 function applySavedOverrides(amenities) {
