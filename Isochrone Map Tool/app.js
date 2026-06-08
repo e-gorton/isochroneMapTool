@@ -2169,7 +2169,7 @@ async function fetchNominatimAmenities(siteCoordinates, mode, options = {}) {
 
   await Promise.all(
     requests.map(async (request) => {
-      const searchUrl = new URL(NOMINATIM_SEARCH_ENDPOINT);
+      const searchUrl = new URL(NOMINATIM_SEARCH_ENDPOINT, window.location.origin);
       searchUrl.searchParams.set("format", "jsonv2");
       searchUrl.searchParams.set("limit", String(request.limit ?? 6));
       searchUrl.searchParams.set("bounded", "1");
