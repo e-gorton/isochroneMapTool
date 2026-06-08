@@ -51,10 +51,34 @@ const AMENITY_COLOR_PALETTE = [
   "#c2410c",
   "#0ea5e9",
   "#a855f7",
+  "#0891b2",
+  "#b91c1c",
+  "#15803d",
+  "#b45309",
+  "#6d28d9",
+  "#047857",
+  "#9d174d",
+  "#4338ca",
+  "#65a30d",
+  "#ea580c",
+  "#0369a1",
+  "#9333ea",
+  "#0e7490",
+  "#be185d",
+  "#1d4ed8",
+  "#a16207",
+  "#166534",
+  "#7e22ce",
 ];
 const DEFAULT_SITE_COORDINATES = "53.801672, -1.548567";
 const DEFAULT_ACCESS_COORDINATES = "53.801155, -1.547860";
 const IS_FILE_CONTEXT = window.location.protocol === "file:";
+function resolveHostedAppEndpoint(path) {
+  if (IS_FILE_CONTEXT || /^https?:\/\//i.test(path)) {
+    return path;
+  }
+  return new URL(path, window.location.origin).toString();
+}
 const OVERPASS_ENDPOINTS = [
   ...(IS_FILE_CONTEXT
     ? [
@@ -62,20 +86,20 @@ const OVERPASS_ENDPOINTS = [
         "https://overpass.kumi.systems/api/interpreter",
         "https://lz4.overpass-api.de/api/interpreter",
       ]
-    : ["/api/proxy/overpass"]),
+    : [resolveHostedAppEndpoint("/api/proxy/overpass")]),
 ];
 const MAPIT_POINT_ENDPOINT = IS_FILE_CONTEXT
   ? "https://mapit.mysociety.org/point/4326"
-  : "/api/proxy/mapit/point/4326";
+  : resolveHostedAppEndpoint("/api/proxy/mapit/point/4326");
 const NOMINATIM_SEARCH_ENDPOINT = IS_FILE_CONTEXT
   ? "https://nominatim.openstreetmap.org/search"
-  : "/api/proxy/nominatim/search";
+  : resolveHostedAppEndpoint("/api/proxy/nominatim/search");
 const VALHALLA_ISOCHRONE_ENDPOINT = IS_FILE_CONTEXT
   ? "https://valhalla1.openstreetmap.de/isochrone"
-  : "/api/proxy/valhalla/isochrone";
+  : resolveHostedAppEndpoint("/api/proxy/valhalla/isochrone");
 const VALHALLA_ROUTE_ENDPOINT = IS_FILE_CONTEXT
   ? "https://valhalla1.openstreetmap.de/route"
-  : "/api/proxy/valhalla/route";
+  : resolveHostedAppEndpoint("/api/proxy/valhalla/route");
 const CYCLING_SPEED_KPH = 16;
 const CYCLING_TIME_GUIDANCE_TEXT =
   "The cycle times detailed in the table are based on a cycling speed of 16 kph which corresponds with DfT guidance.";
@@ -1988,13 +2012,14 @@ async function fetchAmenitiesForScenario(siteCoordinates, mode, options = {}) {
 function getAmenityFetchConfig(mode) {
   if (mode === "cycling") {
     return {
-      endpoints: OVERPASS_ENDPOINTS,
-      radii: [6000, 4500],
-      timeoutMs: 12000,
+      endpoints: [],
+      radii: [],
+      timeoutMs: 0,
       queryBuilder: buildCyclingOverpassQuery,
       transformer: (elements, siteCoordinates) =>
         transformOverpassElements(elements, siteCoordinates, "cycling"),
-      fallbackFetcher: null,
+      fallbackFetcher: (targetSiteCoordinates, options) =>
+        fetchNominatimAmenities(targetSiteCoordinates, "cycling", options),
     };
   }
 
@@ -2087,7 +2112,7 @@ function applyAmenityState(liveAmenities, manualAmenities) {
 async function retryAmenitiesInBackground(siteCoordinates, mode, requestId, manualAmenities, signal) {
   try {
     const liveAmenities = await fetchAmenitiesForScenario(siteCoordinates, mode, {
-      timeoutMsOverride: 16000,
+      timeoutMsOverride: mode === "cycling" ? 30000 : 16000,
       signal,
     });
 
@@ -2121,7 +2146,7 @@ function getOverpassRequestTimeoutMs(mode) {
   if (mode === "bus") {
     return 10000;
   }
-  return 12000;
+  return 28000;
 }
 
 function buildOverpassQuery(siteCoordinates, radius, mode = state.selectedMode) {
@@ -2132,12 +2157,12 @@ function buildOverpassQuery(siteCoordinates, radius, mode = state.selectedMode) 
 
 function buildCyclingOverpassQuery(siteCoordinates, radius) {
   return `
-[out:json][timeout:16];
+[out:json][timeout:25];
 (
-  nwr(around:${radius},${siteCoordinates.latitude},${siteCoordinates.longitude})[place~"town|village|suburb|neighbourhood|locality"][name];
+  node(around:${radius},${siteCoordinates.latitude},${siteCoordinates.longitude})[place~"town|village|suburb|locality"][name];
   nwr(around:${radius},${siteCoordinates.latitude},${siteCoordinates.longitude})[railway=station][name];
-  nwr(around:${radius},${siteCoordinates.latitude},${siteCoordinates.longitude})[amenity~"school|college|university|kindergarten"][name];
-  nwr(around:${radius},${siteCoordinates.latitude},${siteCoordinates.longitude})[amenity~"hospital|clinic|doctors|dentist|pharmacy|health_centre"][name];
+  nwr(around:${radius},${siteCoordinates.latitude},${siteCoordinates.longitude})[amenity~"school|college|university"][name];
+  nwr(around:${radius},${siteCoordinates.latitude},${siteCoordinates.longitude})[amenity~"hospital|clinic|doctors"][name];
 );
 out center tags;
   `;
@@ -2163,13 +2188,22 @@ out center tags;
 }
 
 async function fetchNominatimAmenities(siteCoordinates, mode, options = {}) {
-  const viewbox = buildViewboxForRadius(siteCoordinates, mode === "bus" ? 2200 : 1600);
+  const viewbox = buildViewboxForRadius(siteCoordinates, getNominatimFallbackRadius(mode));
   const requests = getNominatimAmenityRequests(mode);
   const grouped = new Map();
 
   await Promise.all(
     requests.map(async (request) => {
-      const searchUrl = new URL(NOMINATIM_SEARCH_ENDPOINT);
+      let searchUrl;
+      try {
+        searchUrl = new URL(NOMINATIM_SEARCH_ENDPOINT, window.location.origin);
+      } catch (error) {
+        throw createServiceError(
+          "Nominatim",
+          "malformed_request",
+          "The hosted amenity search URL is not configured correctly for this deployment."
+        );
+      }
       searchUrl.searchParams.set("format", "jsonv2");
       searchUrl.searchParams.set("limit", String(request.limit ?? 6));
       searchUrl.searchParams.set("bounded", "1");
@@ -2222,6 +2256,17 @@ async function fetchNominatimAmenities(siteCoordinates, mode, options = {}) {
 }
 
 function getNominatimAmenityRequests(mode) {
+  if (mode === "cycling") {
+    return [
+      { category: "Settlement", query: "town", limit: 6 },
+      { category: "Settlement", query: "village", limit: 6 },
+      { category: "Rail station", query: "[railway station]", limit: 5 },
+      { category: "School", query: "[school]", limit: 6 },
+      { category: "Healthcare", query: "[hospital]", limit: 4 },
+      { category: "Healthcare", query: "[clinic]", limit: 4 },
+    ];
+  }
+
   if (mode === "bus") {
     return [
       { category: "Bus stop", query: "[bus stop]", limit: 8 },
@@ -2245,6 +2290,16 @@ function getNominatimAmenityRequests(mode) {
     { category: "Worship", query: "[church]", limit: 3 },
     { category: "Open space", query: "[park]", limit: 4 },
   ];
+}
+
+function getNominatimFallbackRadius(mode) {
+  if (mode === "cycling") {
+    return 6500;
+  }
+  if (mode === "bus") {
+    return 2200;
+  }
+  return 1600;
 }
 
 function buildViewboxForRadius(siteCoordinates, radiusMetres) {
@@ -2403,7 +2458,7 @@ function selectAmenitiesFromGroupedResults(grouped, mode) {
           .slice(0, categoryLimit);
     selectedItems
       .forEach((item, categoryItemIndex) => {
-        const markerStyle = getAmenityMarkerStyle(category, selected.length, categoryItemIndex);
+        const markerStyle = getAmenityMarkerStyle(item, category);
         item.id = selected.length + 1;
         item.symbol = markerStyle.symbol;
         item.color = markerStyle.color;
@@ -2721,14 +2776,24 @@ function bearingToCardinal(bearing) {
   return directions[index];
 }
 
-function getAmenityMarkerStyle(category, globalIndex, categoryIndex) {
+function getAmenityMarkerStyle(item, category) {
   const symbol = CATEGORY_SYMBOLS[category] ?? "circle";
   const categoryOffset = CATEGORY_OPTIONS.indexOf(category);
-  const color = AMENITY_COLOR_PALETTE[(categoryOffset * 3 + categoryIndex * 5 + globalIndex) % AMENITY_COLOR_PALETTE.length];
+  const stableKey = item?.sourceId || `${category}|${item?.name || ""}`;
+  const colorIndex = positiveHash(`${categoryOffset}|${stableKey}`) % AMENITY_COLOR_PALETTE.length;
+  const color = AMENITY_COLOR_PALETTE[colorIndex];
   return {
     symbol,
     color,
   };
+}
+
+function positiveHash(value) {
+  let hash = 0;
+  String(value).split("").forEach((character) => {
+    hash = (hash * 31 + character.charCodeAt(0)) >>> 0;
+  });
+  return hash;
 }
 
 function applySavedOverrides(amenities) {
