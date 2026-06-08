@@ -104,9 +104,9 @@ const CYCLING_SPEED_KPH = 16;
 const CYCLING_TIME_GUIDANCE_TEXT =
   "The cycle times detailed in the table are based on a cycling speed of 16 kph which corresponds with DfT guidance.";
 const SERVICE_TIMEOUT_MS = {
-  Overpass: 12000,
-  "Valhalla isochrone": 10000,
-  "Valhalla route": 5000,
+  Overpass: 30000,
+  "Valhalla isochrone": 30000,
+  "Valhalla route": 10000,
 };
 const MAP_DIMENSIONS = {
   width: 960,
