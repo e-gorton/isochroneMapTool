@@ -3,8 +3,21 @@
   "main": "cloudflare/worker.js",
   "compatibility_date": "2025-06-07",
   "assets": {
-    "directory": "dist",
+    "directory": ".",
     "binding": "ASSETS",
+    "include": [
+      "index.html",
+      "styles.css",
+      "app.js"
+    ],
+    "exclude": [
+      "node_modules/**",
+      ".git/**",
+      "cloudflare/**",
+      "scripts/**",
+      "dist/**",
+      "*.tar.gz"
+    ],
     "run_worker_first": [
       "/api/*"
     ]
