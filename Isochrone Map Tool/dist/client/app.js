@@ -100,13 +100,25 @@ const VALHALLA_ISOCHRONE_ENDPOINT = IS_FILE_CONTEXT
 const VALHALLA_ROUTE_ENDPOINT = IS_FILE_CONTEXT
   ? "https://valhalla1.openstreetmap.de/route"
   : resolveHostedAppEndpoint("/api/proxy/valhalla/route");
+const OTP_PROXY_ENDPOINT = IS_FILE_CONTEXT
+  ? ""
+  : resolveHostedAppEndpoint("/api/proxy/otp/isochrone");
 const CYCLING_SPEED_KPH = 16;
 const CYCLING_TIME_GUIDANCE_TEXT =
   "The cycle times detailed in the table are based on a cycling speed of 16 kph which corresponds with DfT guidance.";
+const PUBLIC_TRANSPORT_ASSESSMENT_TIME = "08:00";
+const PUBLIC_TRANSPORT_CONTOUR_MINUTES = [15, 30, 45, 60];
+const ENABLE_PROTOTYPE_BUS_FALLBACK = false;
+const OTP_PUBLIC_TRANSPORT_SOURCE_NOTE =
+  "OpenTripPlanner scheduled public transport, weekday 08:00";
+const PROTOTYPE_BUS_FALLBACK_SOURCE_NOTE = "Fallback only - not report-ready";
+const OTP_NOT_CONFIGURED_WARNING =
+  "OpenTripPlanner is not configured, so no report-ready public transport isochrone has been generated.";
 const SERVICE_TIMEOUT_MS = {
   Overpass: 12000,
   "Valhalla isochrone": 10000,
   "Valhalla route": 5000,
+  "OTP isochrone": 10000,
 };
 const MAP_DIMENSIONS = {
   width: 960,
@@ -178,6 +190,8 @@ const state = {
   latestFetchRequestId: 0,
   activeRefreshController: null,
   hasGeneratedDraft: false,
+  lastIsochroneFallbackNotice: "",
+  lastIsochroneSourceNote: "",
   amenityCache: {
     walking: null,
     cycling: null,
@@ -443,7 +457,7 @@ function renderMap() {
   );
     elements.previewNote.textContent =
       state.selectedMode === "bus"
-        ? `${elements.busNote.value} Amenities come from OpenStreetMap and contours come from live Valhalla isochrone routing.`
+        ? `${elements.busNote.value} Contour source: ${state.lastIsochroneSourceNote || OTP_PUBLIC_TRANSPORT_SOURCE_NOTE}.`
         : state.selectedMode === "cycling"
           ? "Cycling mode shows settlements and key destinations such as rail stations, schools and healthcare locations from OpenStreetMap. Cycle distance and time calculations are only run when exporting the CSV. Isochrone geometry comes from live Valhalla routing."
         : "Basemap and amenities are drawn from OpenStreetMap live services. Isochrone geometry comes from live Valhalla routing.";
@@ -540,7 +554,9 @@ function renderMethodNote() {
       methodology: {
         status: "Prototype front-end only",
         map_preview:
-          "OpenStreetMap raster tiles with live Overpass amenity points and live Valhalla routed isochrone contours",
+          state.selectedMode === "bus"
+            ? `OpenStreetMap raster tiles with live OpenStreetMap amenity points. Bus contour source: ${state.lastIsochroneSourceNote || OTP_PUBLIC_TRANSPORT_SOURCE_NOTE}.`
+            : "OpenStreetMap raster tiles with live Overpass amenity points and live Valhalla routed isochrone contours",
         amenity_filtering:
           state.selectedMode === "cycling"
             ? `${visibleCount} visible cycling destinations, ${legendCount} shown in legend, fetched from OpenStreetMap around the current site and measured from the site coordinates`
@@ -548,8 +564,12 @@ function renderMethodNote() {
         cycling_time_assumption:
           state.selectedMode === "cycling" ? CYCLING_TIME_GUIDANCE_TEXT : undefined,
         bus_assumption: elements.busNote.value,
+        public_transport_source:
+          state.selectedMode === "bus" ? state.lastIsochroneSourceNote || OTP_PUBLIC_TRANSPORT_SOURCE_NOTE : undefined,
         limitations: [
-          "Isochrone geometry depends on a public Valhalla demo server and may be subject to fair-use limits or temporary unavailability.",
+          state.selectedMode === "bus"
+            ? "Bus/public transport contours require a configured OpenTripPlanner service and should not be issued for reports where the source note states fallback or no report-ready contour."
+            : "Isochrone geometry depends on a public Valhalla demo server and may be subject to fair-use limits or temporary unavailability.",
           "Amenities are fetched live from OpenStreetMap via Overpass and therefore depend on current public service availability.",
         "The scale bar should still be checked against the final export workflow before issue.",
       ],
@@ -1884,6 +1904,8 @@ async function refreshLiveContext(statusText) {
   const refreshController = new AbortController();
   state.activeRefreshController = refreshController;
   const requestId = ++state.latestFetchRequestId;
+  state.lastIsochroneFallbackNotice = "";
+  state.lastIsochroneSourceNote = "";
   setStatus("Loading isochrones", "Fetching routed isochrone geometry for the current site.", "running");
   render();
 
@@ -1913,12 +1935,16 @@ async function refreshLiveContext(statusText) {
     }
 
     state.isochrones = liveIsochrones;
+    state.lastIsochroneFallbackNotice = liveIsochrones.fallbackNotice || "";
+    state.lastIsochroneSourceNote = liveIsochrones.sourceNote || "";
     setStatus(
       "Isochrones ready",
-      cachedAmenities
+      state.lastIsochroneFallbackNotice
+        ? `${state.lastIsochroneFallbackNotice} Updating amenities in the background.`
+        : cachedAmenities
         ? "Isochrones refreshed. Updating amenities in the background."
         : statusText,
-      "running"
+      state.lastIsochroneFallbackNotice ? "warning" : "running"
     );
     render();
   } catch (error) {
@@ -2066,7 +2092,13 @@ async function handleAmenityRefresh(
 
     applyAmenityState(liveAmenities, manualAmenities);
 
-    if (!isochroneError) {
+    if (!isochroneError && state.lastIsochroneFallbackNotice) {
+      setStatus(
+        "Draft ready with warnings",
+        state.lastIsochroneFallbackNotice,
+        "warning"
+      );
+    } else if (!isochroneError) {
       setStatus(
         "Draft ready",
         "Live OpenStreetMap context and Valhalla isochrones refreshed for the current coordinates.",
@@ -2088,13 +2120,16 @@ async function handleAmenityRefresh(
     const warningText = cachedAmenities
       ? `${describeServiceFailure("Amenities", error)} Using the last successful amenity set for this location as a fallback.`
       : describeServiceFailure("Amenities", error);
+    const combinedWarningText = state.lastIsochroneFallbackNotice
+      ? `${state.lastIsochroneFallbackNotice} ${warningText}`
+      : warningText;
 
     if (!isochroneError) {
-      setStatus("Draft ready with warnings", warningText, "warning");
+      setStatus("Draft ready with warnings", combinedWarningText, "warning");
     } else {
       setStatus(
         "Live service issue",
-        `${describeServiceFailure("Isochrones", isochroneError)} ${warningText}`.trim(),
+        `${describeServiceFailure("Isochrones", isochroneError)} ${combinedWarningText}`.trim(),
         "error"
       );
     }
@@ -2314,6 +2349,75 @@ function buildViewboxForRadius(siteCoordinates, radiusMetres) {
 }
 
 async function fetchIsochronesForScenario(originCoordinates, mode, options = {}) {
+  if (mode === "bus") {
+    return fetchBusIsochronesForScenario(originCoordinates, options);
+  }
+  return fetchValhallaIsochronesForScenario(originCoordinates, mode, options);
+}
+
+async function fetchBusIsochronesForScenario(originCoordinates, options = {}) {
+  let otpError = null;
+  if (OTP_PROXY_ENDPOINT) {
+    try {
+      return await fetchOtpBusIsochrones(originCoordinates, options);
+    } catch (error) {
+      if (error?.kind === "cancelled") {
+        throw error;
+      }
+      otpError = error;
+    }
+  }
+
+  if (!ENABLE_PROTOTYPE_BUS_FALLBACK) {
+    const emptyIsochrones = [];
+    emptyIsochrones.fallbackNotice = OTP_NOT_CONFIGURED_WARNING;
+    emptyIsochrones.sourceNote = OTP_NOT_CONFIGURED_WARNING;
+    return emptyIsochrones;
+  }
+
+  const fallbackIsochrones = await fetchValhallaIsochronesForScenario(
+    originCoordinates,
+    "bus",
+    options
+  );
+  fallbackIsochrones.fallbackNotice = otpError
+    ? `${OTP_NOT_CONFIGURED_WARNING} Prototype fallback routing has been manually enabled.`
+    : "Prototype fallback routing has been manually enabled.";
+  fallbackIsochrones.sourceNote = PROTOTYPE_BUS_FALLBACK_SOURCE_NOTE;
+  return fallbackIsochrones;
+}
+
+async function fetchOtpBusIsochrones(originCoordinates, options = {}) {
+  const configuredBands = getConfiguredBandsForMode("bus");
+  const requestUrl = new URL(OTP_PROXY_ENDPOINT, window.location.origin);
+  requestUrl.searchParams.set("lat", String(originCoordinates.latitude));
+  requestUrl.searchParams.set("lon", String(originCoordinates.longitude));
+  requestUrl.searchParams.set("mode", "TRANSIT,WALK");
+  requestUrl.searchParams.set("cutoffs", PUBLIC_TRANSPORT_CONTOUR_MINUTES.join(","));
+  requestUrl.searchParams.set("date", getNextWeekdayIsoDate());
+  requestUrl.searchParams.set("time", PUBLIC_TRANSPORT_ASSESSMENT_TIME);
+
+  const payload = await fetchJsonWithDiagnostics(
+    requestUrl.toString(),
+    { signal: options.signal },
+    "OTP isochrone"
+  );
+
+  const features = Array.isArray(payload) ? payload : payload?.features;
+  if (!Array.isArray(features) || features.length === 0) {
+    throw createServiceError(
+      "OTP isochrone",
+      "unavailable_routing_data",
+      "OTP did not return any public transport catchment geometry for the selected location."
+    );
+  }
+
+  const otpIsochrones = transformOtpIsochroneFeatures(features, configuredBands);
+  otpIsochrones.sourceNote = OTP_PUBLIC_TRANSPORT_SOURCE_NOTE;
+  return otpIsochrones;
+}
+
+async function fetchValhallaIsochronesForScenario(originCoordinates, mode, options = {}) {
   const modeConfig = MODE_CONFIG[mode];
   const configuredBands = getConfiguredBandsForMode(mode);
   const contours = configuredBands.map((band) => {
@@ -2368,6 +2472,34 @@ async function fetchIsochronesForScenario(originCoordinates, mode, options = {})
     );
   }
   return transformIsochroneFeatures(payload.features ?? [], modeConfig, configuredBands);
+}
+
+function transformOtpIsochroneFeatures(features, configuredBands) {
+  const bandByTime = new Map(configuredBands.map((band) => [String(band.time), band]));
+  return features
+    .filter((feature) => feature.geometry)
+    .map((feature) => {
+      const contourValue =
+        feature.properties?.contour ??
+        feature.properties?.time ??
+        feature.properties?.minutes;
+      const matchedBand = bandByTime.get(String(contourValue));
+      return {
+        geometry: feature.geometry,
+        label: matchedBand?.label ?? `${contourValue} mins`,
+        color: matchedBand?.fill ?? "#3b82f6",
+        contour: contourValue,
+      };
+    })
+    .sort((a, b) => Number(b.contour) - Number(a.contour));
+}
+
+function getNextWeekdayIsoDate(date = new Date()) {
+  const nextDate = new Date(date);
+  while (nextDate.getDay() === 0 || nextDate.getDay() === 6) {
+    nextDate.setDate(nextDate.getDate() + 1);
+  }
+  return nextDate.toISOString().slice(0, 10);
 }
 
 function transformIsochroneFeatures(features, modeConfig, configuredBands) {
