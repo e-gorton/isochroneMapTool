@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prime Transport Planning | Isochrone Workspace</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <div>
+          <p class="eyebrow">Prime Transport Planning</p>
+          <h1>Isochrone Workspace</h1>
+          <p class="subtitle">
+            Internal drafting surface for accessibility plans, technical notes and
+            planning submissions.
+          </p>
+        </div>
+        <div class="header-meta">
+          <div>
+            <span class="meta-label">Workflow</span>
+            <strong>Coordinate-led draft generation</strong>
+          </div>
+          <div>
+            <span class="meta-label">Position</span>
+            <strong>Together for Progress</strong>
+          </div>
+        </div>
+      </header>
+
+      <div class="layout-grid">
+        <aside class="control-rail" aria-label="Project controls">
+          <section class="rail-section">
+            <div class="section-heading">
+              <h2>Project Details</h2>
+              <span>Default fields only</span>
+            </div>
+            <label>
+              <span>Project name</span>
+              <input id="projectName" type="text" value="Land at Hall Lane, Leeds" />
+            </label>
+            <label>
+              <span>Local planning authority</span>
+              <input id="planningAuthority" type="text" value="Leeds City Council" />
+            </label>
+            <label>
+              <span>Output note</span>
+              <textarea id="projectNote" rows="3">Draft isochrone set for site accessibility review ahead of a transport statement.</textarea>
+            </label>
+          </section>
+
+          <section class="rail-section">
+            <div class="section-heading">
+              <h2>Site Coordinates</h2>
+              <span>WGS84 decimal degrees</span>
+            </div>
+            <label>
+              <span>Site coordinates</span>
+              <input
+                id="siteCoordinates"
+                type="text"
+                inputmode="decimal"
+                value="53.801672, -1.548567"
+                placeholder="53.270199580110926, -2.469029559599687"
+              />
+            </label>
+            <label>
+              <span>Proposed access coordinates</span>
+              <input
+                id="accessCoordinates"
+                type="text"
+                inputmode="decimal"
+                value="53.801155, -1.547860"
+                placeholder="Optional. Leave blank to use the site coordinates."
+              />
+            </label>
+            <p class="helper-text">
+              Paste latitude and longitude as a single pair, for example
+              <strong>53.270199580110926, -2.469029559599687</strong>. If access
+              coordinates are left blank, the site marker becomes the routing origin.
+            </p>
+          </section>
+
+          <section class="rail-section">
+            <div class="section-heading">
+              <h2>Travel Modes</h2>
+              <span>Draft outputs</span>
+            </div>
+            <div class="mode-switch" role="tablist" aria-label="Travel mode">
+              <button class="mode-chip active" data-mode="walking" type="button">Walking</button>
+              <button class="mode-chip" data-mode="cycling" type="button">Cycling</button>
+              <button class="mode-chip" data-mode="bus" type="button">Bus</button>
+            </div>
+            <div id="bandSummary" class="band-summary" aria-live="polite"></div>
+            <button id="generateButton" class="primary-action" type="button">
+              Generate draft map
+            </button>
+            <div class="status-strip">
+              <div class="status-dot" id="statusDot"></div>
+              <div>
+                <strong id="statusTitle">Ready to generate</strong>
+                <p id="statusText">Waiting for a draft run.</p>
+              </div>
+            </div>
+          </section>
+
+          <details class="rail-section advanced-panel">
+            <summary>
+              <span>Advanced Settings</span>
+              <span class="summary-note">Collapsed by default</span>
+            </summary>
+            <div class="advanced-grid">
+              <label>
+                <span>Walking bands</span>
+                <input id="walkingBands" type="text" value="1200m, 2000m" />
+              </label>
+              <label>
+                <span>Cycling bands</span>
+                <input id="cyclingBands" type="text" value="2000m, 5000m, 8000m" />
+              </label>
+              <label>
+                <span>Bus bands</span>
+                <input id="busBands" type="text" value="15, 30, 45, 60 minutes" />
+              </label>
+              <div class="band-colour-panel">
+                <span class="band-colour-title">Walking colours</span>
+                <div class="band-colour-grid">
+                  <label class="band-colour-item">
+                    <span>1,200 m</span>
+                    <input id="walkingColor1" class="colour-input" type="color" value="#2563eb" />
+                  </label>
+                  <label class="band-colour-item">
+                    <span>2,000 m</span>
+                    <input id="walkingColor2" class="colour-input" type="color" value="#dc2626" />
+                  </label>
+                </div>
+              </div>
+              <div class="band-colour-panel">
+                <span class="band-colour-title">Cycling colours</span>
+                <div class="band-colour-grid">
+                  <label class="band-colour-item">
+                    <span>2,000 m</span>
+                    <input id="cyclingColor1" class="colour-input" type="color" value="#fff27a" />
+                  </label>
+                  <label class="band-colour-item">
+                    <span>5,000 m</span>
+                    <input id="cyclingColor2" class="colour-input" type="color" value="#f6c9c6" />
+                  </label>
+                  <label class="band-colour-item">
+                    <span>8,000 m</span>
+                    <input id="cyclingColor3" class="colour-input" type="color" value="#c7a3cf" />
+                  </label>
+                </div>
+              </div>
+              <div class="band-colour-panel">
+                <span class="band-colour-title">Bus colours</span>
+                <div class="band-colour-grid">
+                  <label class="band-colour-item">
+                    <span>15 mins</span>
+                    <input id="busColor1" class="colour-input" type="color" value="#1e40af" />
+                  </label>
+                  <label class="band-colour-item">
+                    <span>30 mins</span>
+                    <input id="busColor2" class="colour-input" type="color" value="#3b82f6" />
+                  </label>
+                  <label class="band-colour-item">
+                    <span>45 mins</span>
+                    <input id="busColor3" class="colour-input" type="color" value="#ef4444" />
+                  </label>
+                  <label class="band-colour-item">
+                    <span>60 mins</span>
+                    <input id="busColor4" class="colour-input" type="color" value="#991b1b" />
+                  </label>
+                </div>
+              </div>
+              <label>
+                <span>Legend position</span>
+                <select id="legendPosition">
+                  <option value="inside">Inside frame</option>
+                  <option value="outside">Outside frame</option>
+                </select>
+              </label>
+              <div class="band-colour-panel">
+                <span class="band-colour-title">Map zoom</span>
+                <label class="zoom-control">
+                  <span>Zoom adjustment</span>
+                  <input id="mapZoomAdjust" type="range" min="-2" max="3" step="0.1" value="0" />
+                </label>
+                <p class="zoom-readout"><strong id="mapZoomAdjustValue">Auto fit</strong></p>
+                <button id="recenterMapButton" class="secondary-action" type="button">
+                  Recenter map
+                </button>
+              </div>
+              <label>
+                <span>Bus note</span>
+                <textarea id="busNote" rows="3">Indicative bus catchments shown from a notional in-vehicle journey allowance. Waiting time is not separately modelled in this prototype.</textarea>
+              </label>
+            </div>
+          </details>
+        </aside>
+
+        <main class="main-stage">
+          <section class="preview-stage">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Map Preview</p>
+                <h2>Report-style draft output</h2>
+              </div>
+              <div class="preview-actions">
+                <button id="saveOverridesButton" class="secondary-action" type="button">
+                  Save overrides
+                </button>
+                <button id="resetOverridesButton" class="ghost-action" type="button">
+                  Reset
+                </button>
+              </div>
+            </div>
+            <div class="map-and-summary">
+              <div class="map-frame">
+                <svg id="mapPreview" viewBox="0 0 960 640" role="img" aria-label="Isochrone map preview"></svg>
+              </div>
+              <div class="mode-brief">
+                <div>
+                  <span class="meta-label">Current mode</span>
+                  <strong id="modeLabel">Walking</strong>
+                </div>
+                <div>
+                  <span class="meta-label">Draft extent</span>
+                  <strong id="extentLabel">Local services focus</strong>
+                </div>
+                <div>
+                  <span class="meta-label">Legend items</span>
+                  <strong id="legendCount">0</strong>
+                </div>
+              </div>
+            </div>
+            <div class="assumption-strip">
+              <p id="previewNote">
+                Prototype styling only. Live routing, OSM queries and export QA remain to be connected.
+              </p>
+            </div>
+          </section>
+
+          <section class="editor-stage">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Amenities And Legend</p>
+                <h2>Curate what appears on the plan</h2>
+              </div>
+              <div class="preview-actions">
+                <button id="togglePlacePointButton" class="secondary-action" type="button">
+                  Place manual point
+                </button>
+              </div>
+            </div>
+
+            <div class="manual-point-bar">
+              <label>
+                <span>Point name</span>
+                <input id="manualPointName" type="text" value="Planned local centre" />
+              </label>
+              <label>
+                <span>Category</span>
+                <select id="manualPointCategory"></select>
+              </label>
+              <label>
+                <span>Symbol</span>
+                <select id="manualPointSymbol"></select>
+              </label>
+            </div>
+
+            <div class="table-wrap">
+              <table class="amenities-table">
+                <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Category</th>
+                      <th>Symbol</th>
+                      <th>Colour</th>
+                      <th>Visible</th>
+                      <th>Legend</th>
+                      <th></th>
+                    </tr>
+                </thead>
+                <tbody id="amenitiesTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="outputs-stage">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Outputs</p>
+                <h2>Export set and method note</h2>
+              </div>
+            </div>
+            <div class="outputs-grid">
+              <div class="export-list">
+                <button id="exportPngButton" class="primary-action" type="button">Export PNG</button>
+                <button id="exportSvgButton" class="secondary-action" type="button">Export SVG</button>
+                <button id="exportCsvButton" class="secondary-action" type="button">Amenity CSV</button>
+                <button id="exportJsonButton" class="secondary-action" type="button">Method note JSON</button>
+              </div>
+              <div class="method-note">
+                <h3>Method note preview</h3>
+                <pre id="methodNote"></pre>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
