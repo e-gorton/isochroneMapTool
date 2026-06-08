@@ -100,34 +100,15 @@ const VALHALLA_ISOCHRONE_ENDPOINT = IS_FILE_CONTEXT
 const VALHALLA_ROUTE_ENDPOINT = IS_FILE_CONTEXT
   ? "https://valhalla1.openstreetmap.de/route"
   : resolveHostedAppEndpoint("/api/proxy/valhalla/route");
-const OTP_PROXY_ENDPOINT = IS_FILE_CONTEXT
-  ? ""
-  : resolveHostedAppEndpoint("/api/proxy/otp/isochrone");
 const CYCLING_SPEED_KPH = 16;
 const CYCLING_TIME_GUIDANCE_TEXT =
   "The cycle times detailed in the table are based on a cycling speed of 16 kph which corresponds with DfT guidance.";
 const BUS_INDICATIVE_METHOD_NOTE =
   "Bus contours are indicative Valhalla multimodal outputs and should be checked against current bus timetables before planning issue.";
-const PUBLIC_TRANSPORT_ASSESSMENT_TIME = "08:00";
-const PUBLIC_TRANSPORT_CONTOUR_MINUTES = [15, 30, 45, 60];
-const ENABLE_PROTOTYPE_BUS_FALLBACK = false;
-const OTP_PUBLIC_TRANSPORT_SOURCE_NOTE =
-  "OpenTripPlanner scheduled public transport, weekday 08:00";
-const PROTOTYPE_BUS_FALLBACK_SOURCE_NOTE = "Fallback only - not report-ready";
-const OTP_NOT_CONFIGURED_WARNING =
-  "OpenTripPlanner is not configured, so no report-ready public transport isochrone has been generated.";
-const IMPORTED_BUS_METHOD_NOTE =
-  "Public transport contours imported from OpenTripPlanner output using scheduled public transport data and OpenStreetMap walking network data. Assessment date/time to be confirmed by the user.";
-const BODS_BUS_REACH_METHOD_NOTE =
-  "Scheduled bus reachability derived from BODS timetable data. This layer shows downstream stops reachable from nearby boarding stops at the stated assessment time and is not a continuous public transport isochrone.";
-const BUS_GEOJSON_REQUIRED_TITLE = "Bus contours not shown";
-const BUS_GEOJSON_REQUIRED_WARNING =
-  "Import an OpenTripPlanner public transport isochrone GeoJSON to produce report-ready bus contours. Amenities and the basemap have still been updated.";
 const SERVICE_TIMEOUT_MS = {
   Overpass: 30000,
   "Valhalla isochrone": 30000,
   "Valhalla route": 10000,
-  "OTP isochrone": 10000,
 };
 const MAP_DIMENSIONS = {
   width: 960,
@@ -201,11 +182,6 @@ const state = {
   hasGeneratedDraft: false,
   lastIsochroneFallbackNotice: "",
   lastIsochroneSourceNote: "",
-  importedBusIsochroneFeatures: [],
-  importedBusIsochroneFileName: "",
-  importedBusReachabilityJourneys: [],
-  importedBusReachabilityFileName: "",
-  importedBusReachabilityAssessment: "",
   amenityCache: {
     walking: null,
     cycling: null,
@@ -225,9 +201,6 @@ const elements = {
   siteCoordinates: document.getElementById("siteCoordinates"),
   accessCoordinates: document.getElementById("accessCoordinates"),
   busNote: document.getElementById("busNote"),
-  busAssessmentNote: document.getElementById("busAssessmentNote"),
-  busIsochroneGeojson: document.getElementById("busIsochroneGeojson"),
-  busReachabilityJson: document.getElementById("busReachabilityJson"),
   walkingBands: document.getElementById("walkingBands"),
   cyclingBands: document.getElementById("cyclingBands"),
   busBands: document.getElementById("busBands"),
@@ -303,7 +276,6 @@ function bindEvents() {
     elements.planningAuthority,
     elements.projectNote,
     elements.busNote,
-    elements.busAssessmentNote,
     elements.walkingBands,
     elements.cyclingBands,
     elements.busBands,
@@ -339,8 +311,6 @@ function bindEvents() {
   elements.exportSvgButton.addEventListener("click", exportSvg);
   elements.exportCsvButton.addEventListener("click", exportCsv);
   elements.exportJsonButton.addEventListener("click", exportMethodNote);
-  elements.busIsochroneGeojson.addEventListener("change", onBusIsochroneGeojsonImport);
-  elements.busReachabilityJson.addEventListener("change", onBusReachabilityJsonImport);
   elements.mapPreview.addEventListener("click", onMapClick);
   elements.mapPreview.addEventListener("pointerdown", onMapPointerDown);
   elements.mapPreview.addEventListener("pointermove", onMapPointerMove);
@@ -472,9 +442,8 @@ function renderMap() {
     compareAmenitiesForLegend(a, b, state.selectedMode)
   );
   const configuredBands = getConfiguredBandsForMode(state.selectedMode);
-  const busReachabilityLegendRows = getBusReachabilityLegendRows(configuredBands);
   elements.legendCount.textContent = String(
-    legendItems.length + configuredBands.length + busReachabilityLegendRows.length + 1 + (accessProvided ? 1 : 0)
+    legendItems.length + configuredBands.length + 1 + (accessProvided ? 1 : 0)
   );
     elements.previewNote.textContent =
       state.selectedMode === "bus"
@@ -488,17 +457,6 @@ function renderMap() {
   const legendWidth = legendInside ? 248 : 190;
 
   const bandMarkup = buildIsochroneMarkup(state.isochrones, mapView);
-  const busReachabilityItems = state.selectedMode === "bus"
-    ? buildBusReachabilityDisplayItems(mapView)
-    : [];
-  const busReachabilityMarkup = busReachabilityItems
-    .map((item) => `
-      <g transform="translate(${item.x} ${item.y})">
-        ${drawSymbol("circle", item.color, 7.5, true)}
-      </g>
-    `)
-    .join("");
-
   const pointMarkup = buildAmenityDisplayItems(visibleAmenities, mapView, site)
     .map((item) => `
       <g transform="translate(${item.x} ${item.y})">
@@ -515,7 +473,6 @@ function renderMap() {
         type: "band",
         color: band.fill,
       })),
-      ...busReachabilityLegendRows,
       ...legendItems.map((item) => ({
         name: getLegendLabelForAmenity(item, state.selectedMode),
         type: "amenity",
@@ -543,7 +500,6 @@ function renderMap() {
     <rect x="24" y="24" width="912" height="592" fill="#f8f5ee" stroke="#d7d0c4" stroke-width="1.5"></rect>
     ${basemapMarkup}
     <g opacity="0.82">${bandMarkup}</g>
-    ${busReachabilityMarkup}
     ${pointMarkup}
     ${siteMarker}
     ${accessMarker}
@@ -597,26 +553,8 @@ function renderMethodNote() {
         cycling_time_assumption:
           state.selectedMode === "cycling" ? CYCLING_TIME_GUIDANCE_TEXT : undefined,
         bus_assumption: elements.busNote.value,
-        public_transport_assessment_datetime:
-          state.selectedMode === "bus" ? elements.busAssessmentNote.value : undefined,
         public_transport_method:
           state.selectedMode === "bus" ? BUS_INDICATIVE_METHOD_NOTE : undefined,
-        scheduled_bus_reachability_method:
-          state.selectedMode === "bus" && state.importedBusReachabilityJourneys.length > 0
-            ? BODS_BUS_REACH_METHOD_NOTE
-            : undefined,
-        scheduled_bus_reachability_source:
-          state.selectedMode === "bus" && state.importedBusReachabilityJourneys.length > 0
-            ? {
-                file: state.importedBusReachabilityFileName,
-                assessment_datetime:
-                  state.importedBusReachabilityAssessment || elements.busAssessmentNote.value,
-              }
-            : undefined,
-        scheduled_bus_reachability_journeys:
-          state.selectedMode === "bus" && state.importedBusReachabilityJourneys.length > 0
-            ? state.importedBusReachabilityJourneys.map(formatBusReachabilityJourneyForNote)
-            : undefined,
         public_transport_source:
           state.selectedMode === "bus" ? getBusContourSourceNote() : undefined,
         limitations: [
@@ -2412,293 +2350,6 @@ async function fetchBusIsochronesForScenario(originCoordinates, options = {}) {
   return indicativeIsochrones;
 }
 
-async function fetchOtpBusIsochrones(originCoordinates, options = {}) {
-  const configuredBands = getConfiguredBandsForMode("bus");
-  const requestUrl = new URL(OTP_PROXY_ENDPOINT, window.location.origin);
-  requestUrl.searchParams.set("lat", String(originCoordinates.latitude));
-  requestUrl.searchParams.set("lon", String(originCoordinates.longitude));
-  requestUrl.searchParams.set("mode", "TRANSIT,WALK");
-  requestUrl.searchParams.set("cutoffs", PUBLIC_TRANSPORT_CONTOUR_MINUTES.join(","));
-  requestUrl.searchParams.set("date", getNextWeekdayIsoDate());
-  requestUrl.searchParams.set("time", PUBLIC_TRANSPORT_ASSESSMENT_TIME);
-
-  const payload = await fetchJsonWithDiagnostics(
-    requestUrl.toString(),
-    { signal: options.signal },
-    "OTP isochrone"
-  );
-
-  const features = Array.isArray(payload) ? payload : payload?.features;
-  if (!Array.isArray(features) || features.length === 0) {
-    throw createServiceError(
-      "OTP isochrone",
-      "unavailable_routing_data",
-      "OTP did not return any public transport catchment geometry for the selected location."
-    );
-  }
-
-  const otpIsochrones = transformOtpIsochroneFeatures(features, configuredBands);
-  otpIsochrones.sourceNote = OTP_PUBLIC_TRANSPORT_SOURCE_NOTE;
-  return otpIsochrones;
-}
-
-async function onBusIsochroneGeojsonImport(event) {
-  const file = event.target.files?.[0];
-  if (!file) {
-    return;
-  }
-
-  try {
-    const text = await file.text();
-    const geojson = JSON.parse(text);
-    const features = getGeojsonFeatures(geojson);
-    const importedIsochrones = transformImportedBusIsochroneFeatures(
-      features,
-      getConfiguredBandsForMode("bus")
-    );
-
-    if (importedIsochrones.length === 0) {
-      throw new Error("No polygon or multipolygon features with recognised minute bands were found.");
-    }
-
-    state.importedBusIsochroneFeatures = features;
-    state.importedBusIsochroneFileName = file.name;
-    state.lastIsochroneSourceNote = getImportedBusSourceNote();
-
-    if (state.selectedMode === "bus") {
-      state.isochrones = importedIsochrones;
-      state.isochrones.sourceNote = state.lastIsochroneSourceNote;
-      state.isochrones.fallbackNotice = "";
-    }
-
-    setStatus(
-      "Bus isochrone imported",
-      `Loaded report-ready public transport contours from ${file.name}.`,
-      "ready"
-    );
-    render();
-  } catch (error) {
-    state.importedBusIsochroneFeatures = [];
-    state.importedBusIsochroneFileName = "";
-    if (state.selectedMode === "bus") {
-      state.isochrones = [];
-    }
-    setStatus(
-      "Bus GeoJSON import issue",
-      `The bus isochrone GeoJSON could not be read. ${error.message}`,
-      "error"
-    );
-    render();
-  }
-}
-
-async function onBusReachabilityJsonImport(event) {
-  const file = event.target.files?.[0];
-  if (!file) {
-    return;
-  }
-
-  try {
-    const text = await file.text();
-    const payload = JSON.parse(text);
-    const journeys = normaliseBusReachabilityJourneys(payload);
-    if (journeys.length === 0) {
-      throw new Error("No reachable bus stop journeys with coordinates were found.");
-    }
-
-    state.importedBusReachabilityJourneys = journeys;
-    state.importedBusReachabilityFileName = file.name;
-    state.importedBusReachabilityAssessment =
-      payload.assessmentDateTime || payload.assessment_datetime || elements.busAssessmentNote.value;
-    state.currentMapView = null;
-
-    setStatus(
-      "Bus reachability imported",
-      `Loaded ${journeys.length} scheduled bus reach records from ${file.name}.`,
-      "ready"
-    );
-    render();
-  } catch (error) {
-    state.importedBusReachabilityJourneys = [];
-    state.importedBusReachabilityFileName = "";
-    state.importedBusReachabilityAssessment = "";
-    setStatus(
-      "Bus reachability import issue",
-      `The BODS-derived bus reachability file could not be read. ${error.message}`,
-      "error"
-    );
-    render();
-  }
-}
-
-function getGeojsonFeatures(geojson) {
-  if (geojson?.type === "FeatureCollection" && Array.isArray(geojson.features)) {
-    return geojson.features;
-  }
-  if (geojson?.type === "Feature") {
-    return [geojson];
-  }
-  if (Array.isArray(geojson)) {
-    return geojson;
-  }
-  return [];
-}
-
-function normaliseBusReachabilityJourneys(payload) {
-  const rawJourneys = Array.isArray(payload?.journeys)
-    ? payload.journeys
-    : getGeojsonFeatures(payload).map((feature) => ({
-        ...(feature.properties ?? {}),
-        lat: feature.geometry?.coordinates?.[1],
-        lon: feature.geometry?.coordinates?.[0],
-      }));
-
-  return rawJourneys
-    .map((journey) => {
-      const latitude = Number(journey.lat ?? journey.latitude);
-      const longitude = Number(journey.lon ?? journey.lng ?? journey.longitude);
-      const journeyTimeMinutes = Number(
-        journey.journeyTimeMinutes ?? journey.journey_time_minutes ?? journey.durationMinutes ?? journey.duration
-      );
-      const timeBandMinutes = getBusReachabilityBandMinutes(
-        journey.timeBandMinutes ?? journey.time_band_minutes ?? journey.band ?? journey.cutoff,
-        journeyTimeMinutes
-      );
-
-      if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || !timeBandMinutes) {
-        return null;
-      }
-
-      return {
-        serviceNumber: String(journey.serviceNumber ?? journey.service ?? journey.route ?? "").trim(),
-        originStop: String(journey.originStop ?? journey.origin_stop ?? journey.fromStop ?? "").trim(),
-        originStopAtcoCode: String(journey.originStopAtcoCode ?? journey.origin_atco ?? "").trim(),
-        destinationStop: String(journey.destinationStop ?? journey.destination_stop ?? journey.toStop ?? journey.name ?? "").trim(),
-        destinationStopAtcoCode: String(journey.destinationStopAtcoCode ?? journey.destination_atco ?? "").trim(),
-        departureTime: String(journey.departureTime ?? journey.departure_time ?? "").trim(),
-        arrivalTime: String(journey.arrivalTime ?? journey.arrival_time ?? "").trim(),
-        journeyTimeMinutes: Number.isFinite(journeyTimeMinutes) ? journeyTimeMinutes : "",
-        timeBandMinutes,
-        latitude,
-        longitude,
-      };
-    })
-    .filter(Boolean)
-    .sort((a, b) => a.timeBandMinutes - b.timeBandMinutes || String(a.destinationStop).localeCompare(String(b.destinationStop), "en-GB"));
-}
-
-function getBusReachabilityBandMinutes(rawBand, journeyTimeMinutes) {
-  const configuredBands = getConfiguredBandsForMode("bus")
-    .map((band) => band.time)
-    .filter((time) => Number.isFinite(time))
-    .sort((a, b) => a - b);
-  const parsedBand = Number(String(rawBand ?? "").replace(/[^0-9.]/g, ""));
-  if (Number.isFinite(parsedBand) && configuredBands.includes(parsedBand)) {
-    return parsedBand;
-  }
-  if (!Number.isFinite(journeyTimeMinutes)) {
-    return null;
-  }
-  return configuredBands.find((bandTime) => journeyTimeMinutes <= bandTime) ?? null;
-}
-
-function buildBusReachabilityDisplayItems(mapView) {
-  const configuredBands = getConfiguredBandsForMode("bus");
-  return state.importedBusReachabilityJourneys.map((journey) => {
-    const band = configuredBands.find((candidate) => candidate.time === journey.timeBandMinutes);
-    const point = projectLatLonToSvg(journey.latitude, journey.longitude, mapView);
-    return {
-      ...journey,
-      x: point.x,
-      y: point.y,
-      color: band?.fill ?? "#3b82f6",
-    };
-  });
-}
-
-function getBusReachabilityLegendRows(configuredBands) {
-  if (state.selectedMode !== "bus" || state.importedBusReachabilityJourneys.length === 0) {
-    return [];
-  }
-  const usedBands = new Set(state.importedBusReachabilityJourneys.map((journey) => journey.timeBandMinutes));
-  return configuredBands
-    .filter((band) => usedBands.has(band.time))
-    .map((band) => ({
-      name: `Scheduled bus reach ${band.label}`,
-      type: "amenity",
-      symbol: "circle",
-      color: band.fill,
-    }));
-}
-
-function formatBusReachabilityJourneyForNote(journey) {
-  return {
-    service_number: journey.serviceNumber,
-    origin_stop: journey.originStop,
-    origin_stop_atco_code: journey.originStopAtcoCode,
-    destination_stop: journey.destinationStop,
-    destination_stop_atco_code: journey.destinationStopAtcoCode,
-    departure_time: journey.departureTime,
-    arrival_time: journey.arrivalTime,
-    journey_time_minutes: journey.journeyTimeMinutes,
-    time_band_minutes: journey.timeBandMinutes,
-  };
-}
-
-function transformImportedBusIsochroneFeatures(features, configuredBands) {
-  const bandByMinute = new Map(configuredBands.map((band) => [String(band.time), band]));
-
-  return features
-    .filter((feature) => feature?.geometry?.type === "Polygon" || feature?.geometry?.type === "MultiPolygon")
-    .map((feature) => {
-      const minutes = getBusIsochroneFeatureMinutes(feature.properties ?? {});
-      const matchedBand = bandByMinute.get(String(minutes));
-      if (!matchedBand) {
-        return null;
-      }
-      return {
-        geometry: feature.geometry,
-        label: matchedBand.label,
-        color: matchedBand.fill,
-        contour: matchedBand.time,
-      };
-    })
-    .filter(Boolean)
-    .sort((a, b) => Number(b.contour) - Number(a.contour));
-}
-
-function getBusIsochroneFeatureMinutes(properties) {
-  const candidates = [
-    properties.minutes,
-    properties.cutoff,
-    properties.time,
-    properties.label,
-    properties.name,
-    properties.contour,
-  ];
-
-  for (const candidate of candidates) {
-    if (candidate === null || candidate === undefined) {
-      continue;
-    }
-    const numeric = Number(String(candidate).replace(/[^0-9.]/g, ""));
-    if (Number.isFinite(numeric) && numeric > 0) {
-      return numeric;
-    }
-  }
-  return null;
-}
-
-function getImportedBusSourceNote() {
-  const fileNote = state.importedBusIsochroneFileName
-    ? ` File: ${state.importedBusIsochroneFileName}.`
-    : "";
-  const assessmentNote = elements.busAssessmentNote.value
-    ? ` Assessment date/time: ${elements.busAssessmentNote.value}.`
-    : "";
-  return `${IMPORTED_BUS_METHOD_NOTE}${assessmentNote}${fileNote}`;
-}
-
 function getBusContourSourceNote() {
   if (state.lastIsochroneSourceNote) {
     return state.lastIsochroneSourceNote;
@@ -2803,34 +2454,6 @@ function waitForRetryDelay(delayMs) {
   return new Promise((resolve) => {
     setTimeout(resolve, delayMs);
   });
-}
-
-function transformOtpIsochroneFeatures(features, configuredBands) {
-  const bandByTime = new Map(configuredBands.map((band) => [String(band.time), band]));
-  return features
-    .filter((feature) => feature.geometry)
-    .map((feature) => {
-      const contourValue =
-        feature.properties?.contour ??
-        feature.properties?.time ??
-        feature.properties?.minutes;
-      const matchedBand = bandByTime.get(String(contourValue));
-      return {
-        geometry: feature.geometry,
-        label: matchedBand?.label ?? `${contourValue} mins`,
-        color: matchedBand?.fill ?? "#3b82f6",
-        contour: contourValue,
-      };
-    })
-    .sort((a, b) => Number(b.contour) - Number(a.contour));
-}
-
-function getNextWeekdayIsoDate(date = new Date()) {
-  const nextDate = new Date(date);
-  while (nextDate.getDay() === 0 || nextDate.getDay() === 6) {
-    nextDate.setDate(nextDate.getDate() + 1);
-  }
-  return nextDate.toISOString().slice(0, 10);
 }
 
 function transformIsochroneFeatures(features, modeConfig, configuredBands) {
@@ -3406,17 +3029,6 @@ function getScenarioBounds(scenario, isochrones) {
       coordinates.push({ latitude, longitude });
     });
   });
-
-  if (state.selectedMode === "bus") {
-    state.importedBusReachabilityJourneys.forEach((journey) => {
-      if (Number.isFinite(journey.latitude) && Number.isFinite(journey.longitude)) {
-        coordinates.push({
-          latitude: journey.latitude,
-          longitude: journey.longitude,
-        });
-      }
-    });
-  }
 
   if (coordinates.length === 0) {
     return null;
