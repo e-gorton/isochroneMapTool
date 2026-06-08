@@ -1986,16 +1986,15 @@ async function fetchAmenitiesForScenario(siteCoordinates, mode, options = {}) {
 }
 
 function getAmenityFetchConfig(mode) {
-   if (mode === "cycling") {
+  if (mode === "cycling") {
     return {
-      endpoints: [],
-      radii: [],
-      timeoutMs: 0,
+      endpoints: OVERPASS_ENDPOINTS,
+      radii: [6000, 4500],
+      timeoutMs: 12000,
       queryBuilder: buildCyclingOverpassQuery,
       transformer: (elements, siteCoordinates) =>
         transformOverpassElements(elements, siteCoordinates, "cycling"),
-      fallbackFetcher: (targetSiteCoordinates, options) =>
-        fetchNominatimAmenities(targetSiteCoordinates, "cycling", options),
+      fallbackFetcher: null,
     };
   }
 
@@ -2164,7 +2163,7 @@ out center tags;
 }
 
 async function fetchNominatimAmenities(siteCoordinates, mode, options = {}) {
-  const viewbox = buildViewboxForRadius(siteCoordinates, mode === "cycling" ? 6500 : mode === "bus" ? 2200 : 1600);
+  const viewbox = buildViewboxForRadius(siteCoordinates, mode === "bus" ? 2200 : 1600);
   const requests = getNominatimAmenityRequests(mode);
   const grouped = new Map();
 
@@ -2222,19 +2221,7 @@ async function fetchNominatimAmenities(siteCoordinates, mode, options = {}) {
   return selectAmenitiesFromGroupedResults(grouped, mode);
 }
 
-function getNominatimAmenityRequests(mode) 
-{
-  if (mode === "cycling") {
-    return [
-      { category: "Settlement", query: "town", limit: 6 },
-      { category: "Settlement", query: "village", limit: 6 },
-      { category: "Rail station", query: "[railway station]", limit: 5 },
-      { category: "School", query: "[school]", limit: 6 },
-      { category: "Healthcare", query: "[hospital]", limit: 4 },
-      { category: "Healthcare", query: "[clinic]", limit: 4 },
-    ];
-  }
-{
+function getNominatimAmenityRequests(mode) {
   if (mode === "bus") {
     return [
       { category: "Bus stop", query: "[bus stop]", limit: 8 },
