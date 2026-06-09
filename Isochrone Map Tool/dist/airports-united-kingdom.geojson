@@ -1,0 +1,2969 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.45649,
+          51.47115
+        ]
+      },
+      "properties": {
+        "name": "Heathrow",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 2647216
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.27495,
+          53.35374
+        ]
+      },
+      "properties": {
+        "name": "Manchester Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 78,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296575
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.17818,
+          51.15609
+        ]
+      },
+      "properties": {
+        "name": "Gatwick Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 61,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296598
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.05528,
+          51.50528
+        ]
+      },
+      "properties": {
+        "name": "London City Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 5,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296599
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.34333,
+          51.39667
+        ]
+      },
+      "properties": {
+        "name": "Cardiff Airport",
+        "country": "United Kingdom",
+        "region": "Wales",
+        "elevation_m": 67,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 3345295
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.21583,
+          54.6575
+        ]
+      },
+      "properties": {
+        "name": "Belfast International Airport",
+        "country": "United Kingdom",
+        "region": "Northern Ireland",
+        "elevation_m": 81,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296569
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.8725,
+          54.61806
+        ]
+      },
+      "properties": {
+        "name": "George Best Belfast City Airport",
+        "country": "United Kingdom",
+        "region": "Northern Ireland",
+        "elevation_m": 4,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296570
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.74803,
+          52.45386
+        ]
+      },
+      "properties": {
+        "name": "Birmingham Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 99,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296572
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.99541,
+          50.44056
+        ]
+      },
+      "properties": {
+        "name": "Newquay Cornwall Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 118,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296578
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.71909,
+          51.38267
+        ]
+      },
+      "properties": {
+        "name": "Bristol Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 189,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296587
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.36833,
+          51.87472
+        ]
+      },
+      "properties": {
+        "name": "Luton Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 160,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296589
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.8425,
+          50.78
+        ]
+      },
+      "properties": {
+        "name": "Bournemouth Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 11,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296591
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.0325,
+          51.33083
+        ]
+      },
+      "properties": {
+        "name": "London Biggin Hill Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 182,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296597
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.69556,
+          51.57139
+        ]
+      },
+      "properties": {
+        "name": "London Southend Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 14,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296601
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.02861,
+          53.77167
+        ]
+      },
+      "properties": {
+        "name": "Blackpool Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 10,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296605
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.66057,
+          53.8659
+        ]
+      },
+      "properties": {
+        "name": "Leeds Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 207,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296608
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.42941,
+          54.50919
+        ]
+      },
+      "properties": {
+        "name": "Durham Tees Valley Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 36,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296612
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.32806,
+          52.83111
+        ]
+      },
+      "properties": {
+        "name": "East Midlands Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 93,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296613
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.29556,
+          59.87889
+        ]
+      },
+      "properties": {
+        "name": "Sumburgh Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 6,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296622
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.19778,
+          57.20194
+        ]
+      },
+      "properties": {
+        "name": "Aberdeen Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 65,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296624
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.3725,
+          55.95
+        ]
+      },
+      "properties": {
+        "name": "Edinburgh Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 41,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296627
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.28278,
+          52.67583
+        ]
+      },
+      "properties": {
+        "name": "Norwich International Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 35,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296644
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.64877,
+          52.73571
+        ]
+      },
+      "properties": {
+        "name": "RAF Cottesmore",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 140,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6301526
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.44958,
+          57.02534
+        ]
+      },
+      "properties": {
+        "name": "Barra Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7670761
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.00542,
+          53.48181
+        ]
+      },
+      "properties": {
+        "name": "Robin Hood Doncaster Sheffield Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6940270
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.60197,
+          49.43496
+        ]
+      },
+      "properties": {
+        "name": "Guernsey Airport",
+        "country": "Guernsey",
+        "region": "Forest",
+        "elevation_m": 102,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296594
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.19456,
+          49.20787
+        ]
+      },
+      "properties": {
+        "name": "Jersey Airport",
+        "country": "Jersey",
+        "region": "St Peter",
+        "elevation_m": 84,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296595
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.98942,
+          34.59012
+        ]
+      },
+      "properties": {
+        "name": "Akrotiri Airfield",
+        "country": "United Kingdom",
+        "region": "",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 414605
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.16111,
+          55.04278
+        ]
+      },
+      "properties": {
+        "name": "City of Derry Airport",
+        "country": "United Kingdom",
+        "region": "Northern Ireland",
+        "elevation_m": 6,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296571
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.47972,
+          52.36972
+        ]
+      },
+      "properties": {
+        "name": "Coventry Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 81,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296573
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.1645,
+          51.89383
+        ]
+      },
+      "properties": {
+        "name": "Gloucestershire Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 30,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296574
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.99343,
+          51.50514
+        ]
+      },
+      "properties": {
+        "name": "RAF Lyneham",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 156,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296580
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.68639,
+          55.43722
+        ]
+      },
+      "properties": {
+        "name": "Campbeltown Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 13,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296585
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.06783,
+          51.60533
+        ]
+      },
+      "properties": {
+        "name": "Swansea Airport",
+        "country": "United Kingdom",
+        "region": "Wales",
+        "elevation_m": 91,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296586
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.85,
+          53.33333
+        ]
+      },
+      "properties": {
+        "name": "Liverpool Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 26,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296588
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.29212,
+          49.91318
+        ]
+      },
+      "properties": {
+        "name": "St Mary's Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 31,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296590
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.3568,
+          50.95026
+        ]
+      },
+      "properties": {
+        "name": "Southampton Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 13,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296592
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.29722,
+          50.83556
+        ]
+      },
+      "properties": {
+        "name": "Brighton Shoreham Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 2,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296596
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.77633,
+          51.27583
+        ]
+      },
+      "properties": {
+        "name": "Farnborough Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 72,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296600
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.93917,
+          50.95611
+        ]
+      },
+      "properties": {
+        "name": "Lydd Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 3,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296602
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.34611,
+          51.34194
+        ]
+      },
+      "properties": {
+        "name": "Kent International Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 55,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296603
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.80917,
+          54.9375
+        ]
+      },
+      "properties": {
+        "name": "Carlisle Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 57,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296604
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.35083,
+          53.57444
+        ]
+      },
+      "properties": {
+        "name": "Humberside Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 36,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296606
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.26367,
+          54.13117
+        ]
+      },
+      "properties": {
+        "name": "Barrow/Walney Island Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 52,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296607
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.97778,
+          53.17806
+        ]
+      },
+      "properties": {
+        "name": "Hawarden Airport",
+        "country": "United Kingdom",
+        "region": "Wales",
+        "elevation_m": 13,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296609
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.69167,
+          55.0375
+        ]
+      },
+      "properties": {
+        "name": "Newcastle International Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 81,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296611
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.905,
+          58.95778
+        ]
+      },
+      "properties": {
+        "name": "Kirkwall Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 15,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296621
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.09306,
+          58.45889
+        ]
+      },
+      "properties": {
+        "name": "Wick John O' Groats Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 38,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296623
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0475,
+          57.5425
+        ]
+      },
+      "properties": {
+        "name": "Inverness Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 9,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296625
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.43306,
+          55.87194
+        ]
+      },
+      "properties": {
+        "name": "Glasgow Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 7,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296626
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.25667,
+          55.68194
+        ]
+      },
+      "properties": {
+        "name": "Islay Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 16,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296628
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.58667,
+          55.50944
+        ]
+      },
+      "properties": {
+        "name": "Prestwick Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 19,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296629
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.36278,
+          57.48111
+        ]
+      },
+      "properties": {
+        "name": "Benbecula Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 5,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296630
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.29611,
+          60.43278
+        ]
+      },
+      "properties": {
+        "name": "Scatsa Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 24,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296631
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.02583,
+          56.4525
+        ]
+      },
+      "properties": {
+        "name": "Dundee Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 5,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296632
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.33111,
+          58.21556
+        ]
+      },
+      "properties": {
+        "name": "Stornoway Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 7,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296633
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.36667,
+          56.45
+        ]
+      },
+      "properties": {
+        "name": "Perth / Scone",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 121,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296634
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.86917,
+          56.49917
+        ]
+      },
+      "properties": {
+        "name": "Tiree Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 11,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296635
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.56064,
+          57.64939
+        ]
+      },
+      "properties": {
+        "name": "Kinloss Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 6,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296638
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.86844,
+          56.37289
+        ]
+      },
+      "properties": {
+        "name": "Leuchars Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 11,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296639
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.33917,
+          57.70521
+        ]
+      },
+      "properties": {
+        "name": "Lossiemouth Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": 12,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296641
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.175,
+          52.205
+        ]
+      },
+      "properties": {
+        "name": "Cambridge International Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 14,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296643
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.235,
+          51.885
+        ]
+      },
+      "properties": {
+        "name": "London Stansted Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 106,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296645
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.41389,
+          50.73444
+        ]
+      },
+      "properties": {
+        "name": "Exeter Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 31,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296648
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.25275,
+          54.04891
+        ]
+      },
+      "properties": {
+        "name": "RAF Linton-on Ouse",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 16,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296673
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.52381,
+          53.16617
+        ]
+      },
+      "properties": {
+        "name": "RAF Waddington",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 70,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296675
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.63882,
+          51.00936
+        ]
+      },
+      "properties": {
+        "name": "Yeovilton Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 22,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6301513
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.10583,
+          50.42278
+        ]
+      },
+      "properties": {
+        "name": "Plymouth City Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 145,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6301514
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.4344,
+          52.12938
+        ]
+      },
+      "properties": {
+        "name": "RAF Bentwaters",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 26,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6301523
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.41817,
+          51.553
+        ]
+      },
+      "properties": {
+        "name": "RAF Northolt",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 37,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6301524
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.75917,
+          50.8594
+        ]
+      },
+      "properties": {
+        "name": "Chichester/Goodwood Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7730473
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.14278,
+          58.8258
+        ]
+      },
+      "properties": {
+        "name": "Flotta Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7731028
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.8279,
+          57.2534
+        ]
+      },
+      "properties": {
+        "name": "Broadford Airfield",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7731496
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.79306,
+          52.3053
+        ]
+      },
+      "properties": {
+        "name": "Sywell Aerodrome",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668194
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.07917,
+          52.92
+        ]
+      },
+      "properties": {
+        "name": "Nottingham Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668195
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.77222,
+          59.1906
+        ]
+      },
+      "properties": {
+        "name": "Eday Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668196
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.62847,
+          59.53476
+        ]
+      },
+      "properties": {
+        "name": "Fair Isle Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668197
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.43444,
+          59.3675
+        ]
+      },
+      "properties": {
+        "name": "North Ronaldsay Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668198
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.39967,
+          56.4635
+        ]
+      },
+      "properties": {
+        "name": "Oban Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668199
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.64139,
+          59.1553
+        ]
+      },
+      "properties": {
+        "name": "Stronsay Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668200
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.57667,
+          59.2503
+        ]
+      },
+      "properties": {
+        "name": "Sanday Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668201
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.24361,
+          60.1922
+        ]
+      },
+      "properties": {
+        "name": "Lerwick Tingwall Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668202
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.24306,
+          56.0575
+        ]
+      },
+      "properties": {
+        "name": "Colonsay Airstrip",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668203
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.96111,
+          51.8331
+        ]
+      },
+      "properties": {
+        "name": "Haverfordwest Airport",
+        "country": "United Kingdom",
+        "region": "Wales",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668204
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.67056,
+          50.1028
+        ]
+      },
+      "properties": {
+        "name": "Land's End Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668205
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.10944,
+          50.6781
+        ]
+      },
+      "properties": {
+        "name": "Bembridge Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668206
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.0335,
+          51.1872
+        ]
+      },
+      "properties": {
+        "name": "Lasham Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668208
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.13861,
+          51.2136
+        ]
+      },
+      "properties": {
+        "name": "Redhill Aerodrome",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668209
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.8475,
+          51.3239
+        ]
+      },
+      "properties": {
+        "name": "Blackbushe Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668210
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.12885,
+          52.09493
+        ]
+      },
+      "properties": {
+        "name": "Duxford Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668211
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.50333,
+          51.3519
+        ]
+      },
+      "properties": {
+        "name": "Rochester Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668212
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.62243,
+          56.60114
+        ]
+      },
+      "properties": {
+        "name": "Coll Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7670762
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.05346,
+          60.12197
+        ]
+      },
+      "properties": {
+        "name": "Foula Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7670763
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.92632,
+          60.37856
+        ]
+      },
+      "properties": {
+        "name": "Whalsay Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7670769
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.32016,
+          51.83652
+        ]
+      },
+      "properties": {
+        "name": "London Oxford Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 82,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6453432
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.80818,
+          51.61175
+        ]
+      },
+      "properties": {
+        "name": "Booker Airfield",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 158,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 11427920
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.7812,
+          51.28609
+        ]
+      },
+      "properties": {
+        "name": "RAF Upavon",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8520867
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.65026,
+          54.39755
+        ]
+      },
+      "properties": {
+        "name": "St Angelo Airport",
+        "country": "United Kingdom",
+        "region": "Northern Ireland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8256212
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.89138,
+          53.74333
+        ]
+      },
+      "properties": {
+        "name": "Warton Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 9034837
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.21553,
+          49.70662
+        ]
+      },
+      "properties": {
+        "name": "Alderney Airport",
+        "country": "Guernsey",
+        "region": "Alderney",
+        "elevation_m": 88,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296593
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.62389,
+          54.08333
+        ]
+      },
+      "properties": {
+        "name": "Isle Of Man Airport",
+        "country": "Isle of Man",
+        "region": "Castletown",
+        "elevation_m": 15,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296610
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.64594,
+          -15.96187
+        ]
+      },
+      "properties": {
+        "name": "Saint Helena Airport",
+        "country": "Saint Helena",
+        "region": "Saint Helena",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 11126251
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.15034,
+          51.08717
+        ]
+      },
+      "properties": {
+        "name": "Royal Marines Base Chivenor",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 8,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296577
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.74741,
+          51.15219
+        ]
+      },
+      "properties": {
+        "name": "Boscombe Down Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 124,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296581
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.25571,
+          50.08609
+        ]
+      },
+      "properties": {
+        "name": "RNAS Culdrose",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 81,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296583
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.12357,
+          52.81174
+        ]
+      },
+      "properties": {
+        "name": "Llanbedr Airport",
+        "country": "United Kingdom",
+        "region": "Wales",
+        "elevation_m": 24,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296614
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.05556,
+          53.58167
+        ]
+      },
+      "properties": {
+        "name": "Woodvale Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 11,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296619
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.6,
+          55.41667
+        ]
+      },
+      "properties": {
+        "name": "Boulmer Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 23,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296640
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.61667,
+          52.07222
+        ]
+      },
+      "properties": {
+        "name": "Cranfield Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 109,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296647
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.28639,
+          51.43917
+        ]
+      },
+      "properties": {
+        "name": "Colerne Airfield",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 181,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296654
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.95626,
+          52.12728
+        ]
+      },
+      "properties": {
+        "name": "Wattisham Airfield",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 86,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296656
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.42025,
+          54.13719
+        ]
+      },
+      "properties": {
+        "name": "RAF Dishforth",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 35,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296665
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.5354,
+          54.29238
+        ]
+      },
+      "properties": {
+        "name": "RAF Leeming",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 40,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296666
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.1955,
+          53.83433
+        ]
+      },
+      "properties": {
+        "name": "RAF Church Fenton",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 8,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296668
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.47645,
+          52.61256
+        ]
+      },
+      "properties": {
+        "name": "Wittering Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 83,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296672
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.48324,
+          53.03035
+        ]
+      },
+      "properties": {
+        "name": "Cranwell Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 66,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296677
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.38209,
+          54.20552
+        ]
+      },
+      "properties": {
+        "name": "Topcliffe Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 28,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6301527
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.56163,
+          52.96222
+        ]
+      },
+      "properties": {
+        "name": "RAF Barkston Heath",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 111,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6301528
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.023,
+          57.869
+        ]
+      },
+      "properties": {
+        "name": "Dornoch Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7730984
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.91417,
+          56.5175
+        ]
+      },
+      "properties": {
+        "name": "Glenforsa Airfield",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7731583
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.32583,
+          51.6558
+        ]
+      },
+      "properties": {
+        "name": "Elstree Airfield",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7668213
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.75121,
+          60.42517
+        ]
+      },
+      "properties": {
+        "name": "Out Skerries Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7670764
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.69335,
+          60.32176
+        ]
+      },
+      "properties": {
+        "name": "Papa Stour Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 7670765
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.56228,
+          51.34943
+        ]
+      },
+      "properties": {
+        "name": "Fairoaks Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 10104054
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.23069,
+          49.99919
+        ]
+      },
+      "properties": {
+        "name": "Predannack Airfield",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 11592089
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.05149,
+          52.49747
+        ]
+      },
+      "properties": {
+        "name": "Old Buckenham Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8555865
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.69156,
+          54.58156
+        ]
+      },
+      "properties": {
+        "name": "Newtownards Airport",
+        "country": "United Kingdom",
+        "region": "Northern Ireland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8555869
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.31531,
+          51.71028
+        ]
+      },
+      "properties": {
+        "name": "Pembrey Airport",
+        "country": "United Kingdom",
+        "region": "Wales",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8531965
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.4132,
+          51.35353
+        ]
+      },
+      "properties": {
+        "name": "Ramsgate Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8531966
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.38944,
+          53.47119
+        ]
+      },
+      "properties": {
+        "name": "City Airport Manchester",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8531970
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.61754,
+          52.43534
+        ]
+      },
+      "properties": {
+        "name": "Beccles Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8531974
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.26228,
+          52.51691
+        ]
+      },
+      "properties": {
+        "name": "Halfpenny Green Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8531987
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.95263,
+          53.27907
+        ]
+      },
+      "properties": {
+        "name": "Retford Gamston Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8532002
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.33799,
+          53.10173
+        ]
+      },
+      "properties": {
+        "name": "Caernarfon Airport",
+        "country": "United Kingdom",
+        "region": "Wales",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8532006
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.15284,
+          52.62895
+        ]
+      },
+      "properties": {
+        "name": "Welshpool Airport",
+        "country": "United Kingdom",
+        "region": "Wales",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8532055
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.56057,
+          52.11439
+        ]
+      },
+      "properties": {
+        "name": "Aberporth Airport",
+        "country": "United Kingdom",
+        "region": "Wales",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8533010
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.65758,
+          50.94058
+        ]
+      },
+      "properties": {
+        "name": "Yeovil Aerodrome",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8533066
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.38705,
+          52.55684
+        ]
+      },
+      "properties": {
+        "name": "Peterborough/Sibson Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8533123
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.21977,
+          56.18373
+        ]
+      },
+      "properties": {
+        "name": "Fife Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8533705
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.72295,
+          52.63633
+        ]
+      },
+      "properties": {
+        "name": "North Denes Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8533712
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.1818,
+          50.65343
+        ]
+      },
+      "properties": {
+        "name": "Isle of Wight/Sandown Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8533717
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.53412,
+          51.12004
+        ]
+      },
+      "properties": {
+        "name": "Dunsfold Aerodrome",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8520837
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.97555,
+          55.97454
+        ]
+      },
+      "properties": {
+        "name": "Cumbernauld Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8520870
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.25213,
+          52.46745
+        ]
+      },
+      "properties": {
+        "name": "Peterborough Business Airport",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8520873
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.85,
+          60.75
+        ]
+      },
+      "properties": {
+        "name": "Unst Baltasound",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8298959
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.59971,
+          51.20914
+        ]
+      },
+      "properties": {
+        "name": "Thruxton Aerodrome",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8260361
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.48793,
+          51.47156
+        ]
+      },
+      "properties": {
+        "name": "Heathrow Terminal 5",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 25,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6691393
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.44696,
+          51.45968
+        ]
+      },
+      "properties": {
+        "name": "Heathrow Terminal 4",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6691394
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.45855,
+          51.47044
+        ]
+      },
+      "properties": {
+        "name": "Heathrow Terminal 3",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6691395
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.45061,
+          51.47294
+        ]
+      },
+      "properties": {
+        "name": "Heathrow Terminal 1",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6691396
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.45181,
+          51.46949
+        ]
+      },
+      "properties": {
+        "name": "Heathrow Terminal 2",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6691397
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.21608,
+          58.79178
+        ]
+      },
+      "properties": {
+        "name": "Hoy Longhope",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 8299173
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.87273,
+          60.60342
+        ]
+      },
+      "properties": {
+        "name": "Fetlar Airport",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 10277907
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.45,
+          50.56667
+        ]
+      },
+      "properties": {
+        "name": "Portland Navy",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 3,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296582
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.56667,
+          51.15
+        ]
+      },
+      "properties": {
+        "name": "RAF Middle Wallop",
+        "country": "United Kingdom",
+        "region": "England",
+        "elevation_m": 91,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 6296662
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.43364,
+          55.87173
+        ]
+      },
+      "properties": {
+        "name": "Glasgow",
+        "country": "United Kingdom",
+        "region": "Scotland",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "airport",
+        "geoname_id": 2657865
+      }
+    }
+  ]
+}
