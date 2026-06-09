@@ -125,8 +125,8 @@ const MODE_CONFIG = {
     metric: "distance",
     costing: "pedestrian",
     bands: [
-      { label: "1,200 m", distance: 1.2, fill: "#2563eb" },
-      { label: "2,000 m", distance: 2.0, fill: "#dc2626" },
+      { label: "1,200 m", distance: 1.2, fill: "#00f7ff" },
+      { label: "2,000 m", distance: 2.0, fill: "##ff0000" },
     ],
   },
   cycling: {
@@ -138,9 +138,9 @@ const MODE_CONFIG = {
     metric: "distance",
     costing: "bicycle",
     bands: [
-      { label: "2,000 m", distance: 2.0, fill: "#fff27a" },
-      { label: "5,000 m", distance: 5.0, fill: "#f6c9c6" },
-      { label: "8,000 m", distance: 8.0, fill: "#c7a3cf" },
+      { label: "2,000 m", distance: 2.0, fill: "#00f7ff" },
+      { label: "5,000 m", distance: 5.0, fill: "#22ff00" },
+      { label: "8,000 m", distance: 8.0, fill: "#ff0000" },
     ],
   },
   bus: {
@@ -152,10 +152,10 @@ const MODE_CONFIG = {
     metric: "time",
     costing: "multimodal",
     bands: [
-      { label: "15 mins", time: 15, fill: "#1e40af" },
-      { label: "30 mins", time: 30, fill: "#3b82f6" },
-      { label: "45 mins", time: 45, fill: "#ef4444" },
-      { label: "60 mins", time: 60, fill: "#991b1b" },
+      { label: "15 mins", time: 15, fill: "#00f7ff" },
+      { label: "30 mins", time: 30, fill: "#22ff00" },
+      { label: "45 mins", time: 45, fill: "#ff0000" },
+      { label: "60 mins", time: 60, fill: "#eaff00" },
     ],
   },
 };
