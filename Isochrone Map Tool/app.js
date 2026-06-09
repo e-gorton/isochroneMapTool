@@ -2735,13 +2735,19 @@ function deriveAmenityName(tags, category) {
   if (category === "Bus stop") {
     return deriveBusStopName(tags);
   }
-  return (
+
+  const baseName =
     tags.name ||
     tags.operator ||
     tags.brand ||
     tags.ref ||
-    `${category}`
-  );
+    `${category}`;
+
+  if (category === "Rail station" && !/\bstation\b/i.test(baseName)) {
+    return `${baseName} Station`;
+  }
+
+  return baseName;
 }
 
 function deriveBusStopName(tags) {
