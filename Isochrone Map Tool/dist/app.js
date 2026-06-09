@@ -2377,8 +2377,8 @@ async function fetchValhallaIsochronesForScenario(originCoordinates, mode, optio
     costing: modeConfig.costing,
     contours,
     polygons: true,
-    denoise: 1,
-    generalize: 30,
+    denoise: 0.5,
+    generalize: 5,
     show_locations: false,
   };
 
