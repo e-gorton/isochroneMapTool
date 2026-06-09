@@ -126,7 +126,7 @@ const MODE_CONFIG = {
     costing: "pedestrian",
     bands: [
       { label: "1,200 m", distance: 1.2, fill: "#00f7ff" },
-      { label: "2,000 m", distance: 2.0, fill: "##ff0000" },
+      { label: "2,000 m", distance: 2.0, fill: "#ff0000" },
     ],
   },
   cycling: {
