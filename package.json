@@ -1,0 +1,14 @@
+{
+  "name": "isochronemaptool-cloudflare-deploy",
+  "private": true,
+  "version": "0.1.47",
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy --config wrangler.toml",
+    "check": "node --check cloudflare/worker.js && node --check dist/app.walkcycle.v47.js && node tests/active-travel-network.test.js && node tests/ui-static.test.js",
+    "test": "node tests/active-travel-network.test.js && node tests/ui-static.test.js"
+  },
+  "devDependencies": {
+    "wrangler": "^4.98.0"
+  }
+}
