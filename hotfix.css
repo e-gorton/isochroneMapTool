@@ -18,3 +18,28 @@
 .map-and-summary,
 .map-frame,
 #map { min-height: 100vh !important; }
+
+/* Remove inherited desktop-toolbar stretch inside the narrow left rail. */
+.control-rail .workspace-toolbar,
+.control-rail > .toolbar-block,
+.control-rail .toolbar-block { display: block !important; min-height: 0 !important; height: auto !important; align-self: start !important; }
+.control-rail .toolbar-block { gap: 0 !important; }
+.control-rail .section-heading { min-height: 0 !important; margin: 0 0 5px !important; }
+.control-rail .toolbar-block-actions,
+.control-rail .toolbar-block-mode,
+.control-rail .toolbar-block-export,
+.control-rail .toolbar-block-status { min-height: 0 !important; padding: 7px !important; }
+.control-rail .primary-workflow-actions,
+.control-rail .workspace-actions,
+.control-rail .export-actions,
+.control-rail .override-actions { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; margin: 0 !important; align-items: center !important; }
+.control-rail .primary-workflow-actions .primary-action { flex: 0 0 104px !important; max-width: 104px !important; grid-column: auto !important; }
+.control-rail .primary-workflow-actions .secondary-action,
+.control-rail .export-actions .secondary-action { flex: 0 0 auto !important; width: auto !important; }
+.control-rail #recenterMapButton { flex-basis: auto !important; }
+.control-rail .mode-switch { height: 34px !important; margin: 0 0 6px !important; }
+.control-rail .mode-chip { min-height: 32px !important; padding: 4px 6px !important; }
+.control-rail .band-summary,
+.control-rail .status-strip { min-height: 0 !important; padding: 7px !important; }
+.control-rail .toolbar-block-export .override-actions { margin-top: 6px !important; }
+.control-rail .toolbar-block-export .override-actions .ghost-action { flex: 1 1 104px !important; min-width: 104px !important; }
