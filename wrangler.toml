@@ -1,0 +1,12 @@
+name = "isochronemaptooltest"
+main = "cloudflare/worker.js"
+compatibility_date = "2026-06-09"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
