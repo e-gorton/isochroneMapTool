@@ -1,0 +1,20 @@
+/* Deployment hotfix: compact useful controls and missing manual tools */
+.layout-grid { grid-template-columns: 280px minmax(0, 1fr) !important; }
+.control-rail { padding: 7px !important; }
+.rail-section,
+.advanced-panel,
+.control-rail > .toolbar-block,
+.control-rail > .manual-edit-panel { margin: 0 0 6px !important; padding: 7px !important; }
+.control-rail > .manual-edit-panel { display: grid !important; gap: 6px !important; border: 1px solid #d5dde4 !important; border-radius: 4px !important; background: #f8fafb !important; }
+.control-rail .manual-edit-toolbar,
+.control-rail .manual-edit-actions { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 5px !important; }
+.control-rail .drawing-tool-button { width: 100% !important; min-height: 28px !important; grid-template-columns: 16px minmax(0, 1fr) !important; gap: 5px !important; padding: 4px 6px !important; white-space: normal !important; text-align: left !important; font-size: 10.8px !important; line-height: 1.1 !important; }
+.control-rail .drawing-tool-button::before { width: 16px !important; border-top-width: 3px !important; }
+.control-rail .manual-edit-actions button { width: 100% !important; white-space: normal !important; font-size: 10.8px !important; line-height: 1.1 !important; }
+.control-rail .manual-edit-guidance { display: none !important; }
+.primary-workflow-actions .primary-action { flex: 0 0 104px !important; max-width: 112px !important; }
+.primary-workflow-actions .secondary-action { min-width: 68px !important; }
+.preview-stage,
+.map-and-summary,
+.map-frame,
+#map { min-height: 100vh !important; }
