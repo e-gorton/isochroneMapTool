@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prime Transport Planning | Isochrone Workspace</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
+    <script src="app.walkcycle.v47.js?v=walkcycle-20260702" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <div>
+          <p class="eyebrow">Prime Transport Planning</p>
+          <h1>Isochrone Workspace</h1>
+          <p class="subtitle">
+            Internal drafting surface for accessibility plans, technical notes and
+            planning submissions.
+          </p>
+        </div>
+        <div class="header-meta">
+          <div>
+            <span class="meta-label">Workflow</span>
+            <strong>Coordinate-led draft generation</strong>
+          </div>
+          <div>
+            <span class="meta-label">Position</span>
+            <strong>Together for Progress</strong>
+          </div>
+        </div>
+      </header>
+
+      <div class="layout-grid">
+        <aside class="control-rail" aria-label="Project controls">
+          <section class="rail-section">
+            <div class="section-heading">
+              <h2>Project Details</h2>
+              <span>Default fields only</span>
+            </div>
+            <label>
+              <span>Project name</span>
+              <input id="projectName" type="text" value="Land at Hall Lane, Leeds" />
+            </label>
+            <label>
+              <span>Local planning authority</span>
+              <input id="planningAuthority" type="text" value="Leeds City Council" />
+            </label>
+            <label>
+              <span>Output note</span>
+              <textarea id="projectNote" rows="3">Draft isochrone set for site accessibility review ahead of a transport statement.</textarea>
+            </label>
+          </section>
+
+          <section class="rail-section">
+            <div class="section-heading">
+              <h2>Site Coordinates</h2>
+              <span>WGS84 decimal degrees</span>
+            </div>
+            <label>
+              <span>Site coordinates</span>
+              <input
+                id="siteCoordinates"
+                type="text"
+                inputmode="decimal"
+                value="53.801672, -1.548567"
+                placeholder="53.270199580110926, -2.469029559599687"
+              />
+            </label>
+            <label>
+              <span>Proposed access coordinates</span>
+              <input
+                id="accessCoordinates"
+                type="text"
+                inputmode="decimal"
+                value="53.801155, -1.547860"
+                placeholder="Optional. Leave blank to use the site coordinates."
+              />
+            </label>
+            <p class="helper-text">
+              Paste latitude and longitude as a single pair, for example
+              <strong>51.50806030158578, -0.12803349283074866</strong>. If access
+              coordinates are left blank, the site marker becomes the routing origin.
+            </p>
+          </section>
+
+          <details class="rail-section advanced-panel">
+            <summary>
+              <span>Advanced Settings</span>
+              <span class="summary-note">Collapsed by default</span>
+            </summary>
+            <div class="advanced-grid">
+              <label>
+                <span>Walking bands</span>
+                <input id="walkingBands" type="text" value="1200m, 2000m" />
+              </label>
+              <label>
+                <span>Cycling bands</span>
+                <input id="cyclingBands" type="text" value="2000m, 5000m, 8000m" />
+              </label>
+              <div class="band-colour-panel">
+                <span class="band-colour-title">Walking colours</span>
+                <div class="band-colour-grid">
+                  <label class="band-colour-item">
+                    <span>1,200 m</span>
+                    <input id="walkingColor1" class="colour-input" type="color" value="#00f7ff" />
+                  </label>
+                  <label class="band-colour-item">
+                    <span>2,000 m</span>
+                    <input id="walkingColor2" class="colour-input" type="color" value="#ff0000" />
+                  </label>
+                </div>
+              </div>
+              <div class="band-colour-panel">
+                <span class="band-colour-title">Cycling colours</span>
+                <div class="band-colour-grid">
+                  <label class="band-colour-item">
+                    <span>2,000 m</span>
+                    <input id="cyclingColor1" class="colour-input" type="color" value="#00f7ff" />
+                  </label>
+                  <label class="band-colour-item">
+                    <span>5,000 m</span>
+                    <input id="cyclingColor2" class="colour-input" type="color" value="#22ff00" />
+                  </label>
+                  <label class="band-colour-item">
+                    <span>8,000 m</span>
+                    <input id="cyclingColor3" class="colour-input" type="color" value="#ff0000" />
+                  </label>
+                </div>
+              </div>
+              <input id="legendPosition" type="hidden" value="inside" />
+            </div>
+          </details>
+        </aside>
+
+        <main class="main-stage">
+          <section class="workspace-toolbar" aria-label="Primary workspace controls">
+            <div class="toolbar-block toolbar-block-actions">
+              <div class="section-heading">
+                <h2>Generate Draft</h2>
+                <span>Primary workflow</span>
+              </div>
+              <div class="workspace-actions primary-workflow-actions">
+                <button id="generateButton" class="primary-action" type="button">
+                  Generate Draft Map / Run Isochrone
+                </button>
+                <button id="togglePlacePointButton" class="secondary-action" type="button" aria-pressed="false">
+                  Add Amenity
+                </button>
+                <button id="recenterMapButton" data-recenter-map-button class="secondary-action" type="button">
+                  Recenter Map
+                </button>
+              </div>
+            </div>
+
+            <div class="toolbar-block toolbar-block-mode">
+              <div class="section-heading">
+                <h2>Display Settings</h2>
+                <span>Mode and bands</span>
+              </div>
+              <div class="mode-switch" role="tablist" aria-label="Travel mode">
+                <button class="mode-chip active" data-mode="walking" type="button">Walking</button>
+                <button class="mode-chip" data-mode="cycling" type="button">Cycling</button>
+              </div>
+              <div id="bandSummary" class="band-summary" aria-live="polite"></div>
+            </div>
+
+            <div class="toolbar-block toolbar-block-export">
+              <div class="section-heading">
+                <h2>Export</h2>
+                <span>Maps and schedules</span>
+              </div>
+              <div class="export-actions">
+                <button id="exportPngButton" class="secondary-action" type="button">PNG</button>
+                <button id="exportPdfButton" class="secondary-action" type="button">PDF</button>
+                <button id="exportSvgButton" class="secondary-action" type="button">SVG</button>
+                <button id="exportCsvButton" class="secondary-action" type="button">CSV</button>
+                <button id="exportJsonButton" class="secondary-action" type="button">JSON</button>
+              </div>
+              <div class="override-actions">
+                <button id="saveOverridesButton" class="ghost-action" type="button">Save amenity edits</button>
+                <button id="resetOverridesButton" class="ghost-action" type="button">Reset edits</button>
+              </div>
+            </div>
+
+            <div class="toolbar-block toolbar-block-status">
+              <div class="section-heading">
+                <h2>Status</h2>
+                <span>Live preview</span>
+              </div>
+              <div class="status-strip" role="status" aria-live="polite">
+                <div class="status-dot" id="statusDot"></div>
+                <div>
+                  <strong id="statusTitle">Ready to generate</strong>
+                  <p id="statusText">Waiting for a draft run.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-stage">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Map Preview</p>
+                <h2>Report-style draft output</h2>
+              </div>
+            </div>
+            <div class="map-and-summary">
+              <div class="map-frame">
+                <div id="map" aria-label="Interactive isochrone map"></div>
+                <svg id="mapPreview" viewBox="0 0 960 640" role="img" aria-label="Isochrone map preview"></svg>
+              </div>
+              <div class="mode-brief">
+                <div>
+                  <span class="meta-label">Current mode</span>
+                  <strong id="modeLabel">Walking</strong>
+                </div>
+                <div>
+                  <span class="meta-label">Draft extent</span>
+                  <strong id="extentLabel">Local services focus</strong>
+                </div>
+                <div>
+                  <span class="meta-label">Legend items</span>
+                  <strong id="legendCount">0</strong>
+                </div>
+              </div>
+            </div>
+            <div class="assumption-strip">
+              <p id="previewNote">
+                Walking and cycling outputs are indicative active-travel network catchments generated for planning-stage accessibility review.
+              </p>
+            </div>
+          </section>
+
+          <section class="editor-stage">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Amenities And Legend</p>
+                <h2>Curate what appears on the plan</h2>
+              </div>
+            </div>
+
+            <div class="manual-edit-panel">
+              <label class="manual-overlay-name">
+                <span>Manual edit name</span>
+                <input
+                  id="manualOverlayName"
+                  type="text"
+                  placeholder="Optional name for the next drawn line or exclusion area"
+                />
+              </label>
+
+              <div class="manual-edit-toolbar" role="group" aria-label="Manual map editing tools">
+                <button class="secondary-action drawing-tool-button" id="drawWalkingPathButton" type="button" data-drawing-tool="walking-path" aria-pressed="false">
+                  Draw walking path
+                </button>
+                <button class="secondary-action drawing-tool-button" id="drawCyclingPathButton" type="button" data-drawing-tool="cycling-path" aria-pressed="false">
+                  Draw cycling path
+                </button>
+                <button class="secondary-action drawing-tool-button" id="drawSharedPathButton" type="button" data-drawing-tool="shared-path" aria-pressed="false">
+                  Draw shared walk/cycle path
+                </button>
+                <button class="secondary-action drawing-tool-button" id="drawBridgeLinkButton" type="button" data-drawing-tool="bridge-crossing" aria-pressed="false">
+                  Draw bridge/crossing link
+                </button>
+                <button class="secondary-action drawing-tool-button" id="drawBarrierLineButton" type="button" data-drawing-tool="barrier-line" aria-pressed="false">
+                  Draw no walk/cycle barrier
+                </button>
+                <button class="secondary-action drawing-tool-button" id="drawExclusionAreaButton" type="button" data-drawing-tool="exclusion-area" aria-pressed="false">
+                  Draw isochrone exclusion area
+                </button>
+              </div>
+
+              <div class="manual-edit-actions" role="group" aria-label="Manual edit actions">
+                <button id="finishDrawingButton" class="secondary-action" type="button">Finish drawing</button>
+                <button id="cancelDrawingButton" class="ghost-action" type="button">Cancel drawing</button>
+                <button id="clearLastManualEditButton" class="ghost-action" type="button">Clear last manual edit</button>
+                <button id="clearAllManualEditsButton" class="ghost-action" type="button">Clear all manual edits</button>
+              </div>
+
+              <p id="manualEditStatus" class="helper-text" aria-live="polite">
+                Select a drawing tool to add proposed routes, barriers or isochrone exclusion areas.
+              </p>
+
+              <div class="manual-edit-guidance" aria-label="Manual edit guidance">
+                <strong>Drawing tips</strong>
+                <p>
+                  Proposed walk, cycle, shared-use and bridge links are modelling assumptions for the local
+                  walking/cycling graph. Draw them so they cross or touch the road/path you want to connect to,
+                  then finish the drawing to trigger a refreshed walking or cycling catchment.
+                </p>
+                <p>
+                  Barriers restrict crossed walking/cycling graph edges. Exclusion areas only mask the displayed
+                  isochrone fill and do not change the routed network.
+                </p>
+              </div>
+            </div>
+
+            <div class="manual-point-bar">
+              <label>
+                <span>Point name</span>
+                <input id="manualPointName" type="text" value="Planned local centre" />
+              </label>
+              <label>
+                <span>Category</span>
+                <select id="manualPointCategory"></select>
+              </label>
+              <label>
+                <span>Symbol</span>
+                <select id="manualPointSymbol"></select>
+              </label>
+            </div>
+
+            <div class="list-panel" role="region" aria-label="Amenity legend editing list">
+              <div class="list-heading">
+                <h3>Amenities</h3>
+                <p>Rename, restyle, hide or remove plotted points.</p>
+              </div>
+              <div id="amenitiesTableBody" class="amenity-card-list"></div>
+            </div>
+
+            <div class="list-panel" role="region" aria-label="Manual map edit list">
+              <div class="list-heading">
+                <h3>Manual Map Editing</h3>
+                <p>Manage proposed routes, barriers and exclusion areas.</p>
+              </div>
+              <div id="manualOverlaysTableBody" class="manual-card-list"></div>
+            </div>
+          </section>
+
+          <section class="outputs-stage">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Outputs</p>
+                <h2>Export set and method note</h2>
+              </div>
+            </div>
+            <div class="outputs-grid">
+              <div class="method-note">
+                <h3>Method note preview</h3>
+                <pre id="methodNote"></pre>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
