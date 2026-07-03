@@ -18,6 +18,20 @@
     const t = Math.max(0, Math.min(1, Number(fraction) || 0));
     return { latitude: Number(a.latitude) + (Number(b.latitude) - Number(a.latitude)) * t, longitude: Number(a.longitude) + (Number(b.longitude) - Number(a.longitude)) * t };
   };
+  window.dedupeCoordinates = (coordinates, precision = 6) => {
+    const seen = new Set();
+    const output = [];
+    (coordinates || []).forEach((coordinate) => {
+      const latitude = Number(coordinate?.latitude);
+      const longitude = Number(coordinate?.longitude);
+      if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+      const key = `${latitude.toFixed(precision)},${longitude.toFixed(precision)}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      output.push({ ...coordinate, latitude, longitude });
+    });
+    return output;
+  };
 
   const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const symbolSvg = (symbol = 'circle', color = '#21618c', size = 18) => {
@@ -45,11 +59,11 @@
     const rail = document.querySelector('.control-rail'); const main = document.querySelector('.main-stage'); if (!rail || !main) return;
     const access = document.getElementById('accessCoordinates'); if (access) { access.value = ''; access.closest('label')?.remove(); }
     document.getElementById('projectNote')?.closest('label')?.remove();
-    const toolbar = document.querySelector('.workspace-toolbar'); const advanced = document.querySelector('.advanced-panel'); const editor = document.querySelector('.editor-stage'); const manual = document.querySelector('.manual-edit-panel'); const outputs = document.querySelector('.outputs-stage');
+    const toolbar = document.querySelector('.workspace-toolbar'); const advanced = document.querySelector('.advanced-panel'); const manual = document.querySelector('.manual-edit-panel'); const outputs = document.querySelector('.outputs-stage');
     const actions = document.querySelector('.toolbar-block-actions') || toolbar?.querySelector('.toolbar-block-actions'); const mode = document.querySelector('.toolbar-block-mode') || toolbar?.querySelector('.toolbar-block-mode'); const exports = document.querySelector('.toolbar-block-export') || toolbar?.querySelector('.toolbar-block-export'); const status = document.querySelector('.toolbar-block-status') || toolbar?.querySelector('.toolbar-block-status');
     const after = (node, ref) => node && ref?.parentElement === rail && rail.insertBefore(node, ref.nextSibling);
     if (advanced?.parentElement === rail) { after(actions, advanced); after(mode, actions || advanced); } else { if (actions) rail.appendChild(actions); if (mode) rail.appendChild(mode); }
-    if (editor?.parentElement === rail) editor.querySelectorAll('.list-panel').forEach((list) => rail.appendChild(list));
+    document.querySelectorAll('.list-panel').forEach((list) => rail.appendChild(list));
     if (manual) rail.appendChild(manual); if (exports) rail.appendChild(exports); outputs?.remove(); if (status) rail.appendChild(status); toolbar?.remove(); document.querySelector('.bottom-panels')?.remove();
     document.querySelectorAll('.amenity-symbol').forEach((node) => { const card = node.closest('.amenity-card'); node.innerHTML = symbolSvg(card?.querySelector('select[data-field="symbol"]')?.value || 'circle', card?.querySelector('input[data-field="color"]')?.value || '#21618c', 18); });
   };
