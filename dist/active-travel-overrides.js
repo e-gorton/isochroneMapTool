@@ -1,5 +1,8 @@
 (() => {
   const $ = (id) => document.getElementById(id);
+  const primeConfig = () => window.PRIME_SYMBOLOGY || { categories: [], categoryNames: [] };
+  const primeCategories = () => primeConfig().categories || [];
+  const byCategory = () => new Map(primeCategories().map((item) => [item.primeCategory, item]));
   const toRad = (value) => (Number(value) * Math.PI) / 180;
   const distanceMetres = (a, b) => {
     if (!a || !b) return Infinity;
@@ -19,104 +22,49 @@
       element.dispatchEvent(new Event('change', { bubbles: true }));
     }
   };
-
-  const PRIME_CATEGORIES = [
-    'Railway Station',
-    'Community Centre',
-    'Bank',
-    'ATM',
-    'Primary School',
-    'Secondary School',
-    'Medical Facility',
-    'Dentist',
-    'Pharmacy',
-    'Place of Worship',
-    'Post Office',
-    'Post Box',
-    'Public House',
-    'Recreation Facility',
-    'Supermarket',
-    'Convenience Store',
-    'Employment Areas',
-  ];
-  const CATEGORY_SYMBOL = {
-    'Railway Station': 'diamond',
-    'Community Centre': 'hex',
-    Bank: 'square',
-    ATM: 'square',
-    'Primary School': 'triangle',
-    'Secondary School': 'pentagon',
-    'Medical Facility': 'cross',
-    Dentist: 'cross',
-    Pharmacy: 'cross',
-    'Place of Worship': 'pentagon',
-    'Post Office': 'square',
-    'Post Box': 'square',
-    'Public House': 'star',
-    'Recreation Facility': 'ring',
-    Supermarket: 'circle',
-    'Convenience Store': 'circle',
-    'Employment Areas': 'square',
+  const normaliseTagValue = (value) => String(value ?? '').trim().toLowerCase();
+  const getTags = (item) => ({ ...(item?.tags || {}), ...(item?.osmTags || {}), ...(item?.properties?.tags || {}), ...(item?.properties || {}) });
+  const tagMatchesRule = (tags, rule) => Object.entries(rule).every(([key, allowed]) => {
+    const value = normaliseTagValue(tags[key]);
+    if (!value) return false;
+    const values = Array.isArray(allowed) ? allowed : [allowed];
+    return values.some((candidate) => candidate === '*' || normaliseTagValue(candidate) === value);
+  });
+  const findPrimeByTags = (item) => {
+    const tags = getTags(item);
+    return primeCategories().find((category) => (category.osm || []).some((rule) => tagMatchesRule(tags, rule))) || null;
   };
-  const CATEGORY_COLOR = {
-    'Railway Station': '#1d4ed8',
-    'Community Centre': '#7c3aed',
-    Bank: '#0f766e',
-    ATM: '#14b8a6',
-    'Primary School': '#f59e0b',
-    'Secondary School': '#d97706',
-    'Medical Facility': '#dc2626',
-    Dentist: '#ef4444',
-    Pharmacy: '#16a34a',
-    'Place of Worship': '#9333ea',
-    'Post Office': '#b45309',
-    'Post Box': '#ca8a04',
-    'Public House': '#be123c',
-    'Recreation Facility': '#4d7c0f',
-    Supermarket: '#2563eb',
-    'Convenience Store': '#0ea5e9',
-    'Employment Areas': '#475569',
-  };
-  const CATEGORY_PRIORITY = new Map(PRIME_CATEGORIES.map((category, index) => [category, index]));
-
-  const classifyAmenity = (item) => {
+  const findPrimeByName = (item) => {
     const text = `${item?.category || ''} ${item?.name || ''} ${item?.sourceId || ''}`.toLowerCase();
-    if (/rail|station/.test(text)) return 'Railway Station';
-    if (/community|village hall|civic|library/.test(text)) return 'Community Centre';
-    if (/\bbank\b/.test(text)) return 'Bank';
-    if (/\batm\b|cash ?point/.test(text)) return 'ATM';
-    if (/primary|junior|infant/.test(text)) return 'Primary School';
-    if (/secondary|high school|college|academy/.test(text)) return 'Secondary School';
-    if (/dentist|dental/.test(text)) return 'Dentist';
-    if (/pharmacy|chemist/.test(text)) return 'Pharmacy';
-    if (/doctor|gp|surgery|clinic|health|medical|hospital/.test(text)) return 'Medical Facility';
-    if (/church|mosque|masjid|synagogue|temple|worship|chapel/.test(text)) return 'Place of Worship';
-    if (/post office/.test(text)) return 'Post Office';
-    if (/post box|letter box/.test(text)) return 'Post Box';
-    if (/pub|public house|bar|inn/.test(text)) return 'Public House';
-    if (/gym|sport|leisure|fitness|recreation|sports centre|swimming/.test(text)) return 'Recreation Facility';
-    if (/supermarket|tesco|sainsbury|asda|morrisons|aldi|lidl|waitrose|marks.*spencer|m&s/.test(text)) return 'Supermarket';
-    if (/convenience|shop|store|co-op|coop|spar|premier|costcutter|one stop|nisa|local/.test(text)) return 'Convenience Store';
-    if (/employment|industrial|business park|office|commercial|works|estate|factory|warehouse/.test(text)) return 'Employment Areas';
-    if (/education|school/.test(text)) return 'Primary School';
-    if (/retail|food and drink/.test(text)) return 'Convenience Store';
-    if (/healthcare/.test(text)) return 'Medical Facility';
-    if (/open space|settlement|neighbourhood|neighborhood/.test(text)) return null;
-    return item?.category === 'Employment Areas' ? 'Employment Areas' : null;
+    if (/open space|settlement|neighbou?rhood/.test(text)) return null;
+    return primeCategories().find((category) => (category.nameFallback || []).some((needle) => text.includes(String(needle).toLowerCase()))) || null;
+  };
+  const classifyAmenity = (item) => findPrimeByTags(item) || findPrimeByName(item) || (item?.category === 'Employment Areas' ? byCategory().get('Employment Areas') : null);
+  const categoryNames = () => primeCategories().map((item) => item.primeCategory);
+  const categoryPriority = () => new Map(categoryNames().map((category, index) => [category, index]));
+  const categorySymbols = () => Object.fromEntries(primeCategories().map((item) => [item.primeCategory, item.markerShape || 'circle']));
+  const categoryColours = () => Object.fromEntries(primeCategories().map((item) => [item.primeCategory, item.colour || '#2563eb']));
+
+  const isTag = (item, key, value) => normaliseTagValue(getTags(item)[key]) === normaliseTagValue(value);
+  const hasPrimaryPreferred = (items, category) => {
+    const primary = category?.preferTags?.primary;
+    if (!primary) return false;
+    return items.some((item) => Object.entries(primary).every(([key, value]) => isTag(item, key, value)) && item.visible !== false);
+  };
+  const isFallbackPreferred = (item, category) => {
+    const fallback = category?.preferTags?.fallback;
+    if (!fallback) return false;
+    return Object.entries(fallback).every(([key, value]) => isTag(item, key, value));
   };
 
   const patchGlobals = () => {
     try {
-      if (Array.isArray(CATEGORY_OPTIONS)) {
-        CATEGORY_OPTIONS.splice(0, CATEGORY_OPTIONS.length, ...PRIME_CATEGORIES);
-      }
-      if (typeof CATEGORY_SYMBOLS === 'object' && CATEGORY_SYMBOLS) {
-        Object.assign(CATEGORY_SYMBOLS, CATEGORY_SYMBOL);
-        delete CATEGORY_SYMBOLS.Employment;
-      }
-      if (Array.isArray(AMENITY_COLOR_PALETTE)) {
-        AMENITY_COLOR_PALETTE.splice(0, AMENITY_COLOR_PALETTE.length, ...Object.values(CATEGORY_COLOR));
-      }
+      const names = categoryNames();
+      const symbols = categorySymbols();
+      const colours = categoryColours();
+      if (Array.isArray(CATEGORY_OPTIONS)) CATEGORY_OPTIONS.splice(0, CATEGORY_OPTIONS.length, ...names);
+      if (typeof CATEGORY_SYMBOLS === 'object' && CATEGORY_SYMBOLS) Object.assign(CATEGORY_SYMBOLS, symbols);
+      if (Array.isArray(AMENITY_COLOR_PALETTE)) AMENITY_COLOR_PALETTE.splice(0, AMENITY_COLOR_PALETTE.length, ...Object.values(colours));
       if (typeof MODE_CONFIG === 'object' && MODE_CONFIG) {
         MODE_CONFIG.walking.extent = 'Local destinations focus';
         MODE_CONFIG.walking.bands = [
@@ -181,40 +129,55 @@
     const site = state.generatedScenario.siteCoordinates;
     const buckets = new Map();
     state.amenities.forEach((item) => {
-      const category = classifyAmenity(item);
-      if (!category) {
+      const prime = classifyAmenity(item);
+      if (!prime) {
         item.visible = false;
         item.showInLegend = false;
         return;
       }
-      item.category = category;
-      item.symbol = CATEGORY_SYMBOL[category] || item.symbol || 'circle';
-      item.color = CATEGORY_COLOR[category] || item.color || '#2563eb';
+      item.primeCategory = prime.primeCategory;
+      item.primeSymbolName = prime.primeSymbolName;
+      item.displayLabel = prime.legendLabel;
+      item.featureType = prime.featureType;
+      item.source = item.source || 'OSM/manual';
+      item.originalOsmTags = getTags(item);
+      item.category = prime.primeCategory;
+      item.symbol = prime.markerShape || item.symbol || 'circle';
+      item.webIcon = prime.webIcon;
+      item.color = prime.colour || item.color || '#2563eb';
+      item.outlineColor = prime.outlineColour || item.color;
       item.__primeDistance = distanceMetres(site, item);
-      if (!buckets.has(category)) buckets.set(category, []);
-      buckets.get(category).push(item);
+      if (!buckets.has(prime.primeCategory)) buckets.set(prime.primeCategory, []);
+      buckets.get(prime.primeCategory).push(item);
     });
-    buckets.forEach((items, category) => {
+    const categories = byCategory();
+    buckets.forEach((items, categoryName) => {
+      const category = categories.get(categoryName);
       items.sort((a, b) => a.__primeDistance - b.__primeDistance);
-      let limit = category === 'Railway Station' ? Number.POSITIVE_INFINITY : 2;
-      if (category === 'Convenience Store' || category === 'Supermarket') limit = Math.max(limit, 2);
+      const unlimited = categoryName === 'Transport - Train Station';
       items.forEach((item, index) => {
-        item.visible = index < limit;
-        item.showInLegend = index < limit;
+        item.visible = unlimited || index < 2;
+        item.showInLegend = item.visible;
       });
+      if (hasPrimaryPreferred(items, category)) {
+        items.forEach((item) => {
+          if (isFallbackPreferred(item, category)) {
+            item.visible = false;
+            item.showInLegend = false;
+          }
+        });
+      }
+      if (categoryName === 'Facilities - Retail') {
+        const visibleConvenience = items.filter((item) => item.visible !== false && isTag(item, 'shop', 'convenience'));
+        const visibleSupermarket = items.some((item) => item.visible !== false && isTag(item, 'shop', 'supermarket'));
+        if (visibleSupermarket && visibleConvenience.length > 1) visibleConvenience.slice(1).forEach((item) => { item.visible = false; item.showInLegend = false; });
+      }
     });
-    const hasBank = buckets.has('Bank') && buckets.get('Bank').some((item) => item.visible);
-    if (hasBank && buckets.has('ATM')) buckets.get('ATM').forEach((item) => { item.visible = false; item.showInLegend = false; });
-    const hasPostOffice = buckets.has('Post Office') && buckets.get('Post Office').some((item) => item.visible);
-    if (hasPostOffice && buckets.has('Post Box')) buckets.get('Post Box').forEach((item) => { item.visible = false; item.showInLegend = false; });
-    const hasSupermarket = buckets.has('Supermarket') && buckets.get('Supermarket').some((item) => item.visible);
-    if (hasSupermarket && buckets.has('Convenience Store')) {
-      const closestConvenience = buckets.get('Convenience Store')[0];
-      buckets.get('Convenience Store').forEach((item) => { item.visible = item === closestConvenience; item.showInLegend = item === closestConvenience; });
-    }
-    state.amenities.sort((a, b) => (CATEGORY_PRIORITY.get(a.category) ?? 999) - (CATEGORY_PRIORITY.get(b.category) ?? 999) || (a.__primeDistance || 0) - (b.__primeDistance || 0));
+    const priority = categoryPriority();
+    state.amenities.sort((a, b) => (priority.get(a.category) ?? 999) - (priority.get(b.category) ?? 999) || (a.__primeDistance || 0) - (b.__primeDistance || 0));
   };
 
+  const amenityGeometry = (item) => item.geometry || (Number.isFinite(Number(item.longitude)) && Number.isFinite(Number(item.latitude)) ? { type: 'Point', coordinates: [Number(item.longitude), Number(item.latitude)] } : null);
   const exportGeojson = () => {
     try {
       normaliseAmenities();
@@ -226,7 +189,18 @@
       }));
       const site = state?.generatedScenario?.siteCoordinates;
       if (site) add({ type: 'Point', coordinates: [site.longitude, site.latitude] }, { featureType: 'site_marker', name: 'Site marker' });
-      (state?.amenities || []).filter((item) => item.visible !== false).forEach((item) => add({ type: 'Point', coordinates: [item.longitude, item.latitude] }, { featureType: item.category === 'Employment Areas' ? 'employment_area' : 'amenity', name: item.name, category: item.category, symbol: item.symbol, colour: item.color }));
+      (state?.amenities || []).filter((item) => item.visible !== false).forEach((item) => add(amenityGeometry(item), {
+        original_osm_tags: item.originalOsmTags || getTags(item),
+        prime_category: item.primeCategory || item.category,
+        prime_symbol_name: item.primeSymbolName || item.category,
+        display_label: item.displayLabel || item.name || item.category,
+        feature_type: item.featureType || 'point',
+        source: item.source || 'OSM/manual',
+        name: item.name || '',
+        colour: item.color,
+        web_icon: item.webIcon,
+        qgis_reference: byCategory().get(item.primeCategory || item.category)?.qgisSvg || null,
+      }));
       const blob = new Blob([JSON.stringify({ type: 'FeatureCollection', features }, null, 2)], { type: 'application/geo+json;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -256,7 +230,7 @@
       (state?.amenities || []).filter((item) => item.visible !== false).forEach((item) => {
         const distance = Math.round(distanceMetres(site, item));
         const cyclingDistance = Math.round(distance);
-        rows.push([item.category, item.name || '', item.postcode || '', distance, cyclingDistance, catchmentBand(distance, cyclingDistance)]);
+        rows.push([item.primeCategory || item.category, item.name || '', item.postcode || getTags(item).postcode || '', distance, cyclingDistance, catchmentBand(distance, cyclingDistance)]);
       });
       const csv = rows.map((row) => row.map(csvEscape).join(',')).join('\n');
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
@@ -283,7 +257,7 @@
     }
     const checklist = document.querySelector('.amenity-category-checklist');
     if (checklist) {
-      PRIME_CATEGORIES.forEach((category) => {
+      categoryNames().forEach((category) => {
         const exists = Array.from(checklist.querySelectorAll('label')).some((label) => label.textContent.trim() === category);
         if (!exists) {
           const label = document.createElement('label');
@@ -300,10 +274,9 @@
     setValue('cyclingBands', '5 km, 8 km');
     const category = $('manualPointCategory');
     if (category) {
-      PRIME_CATEGORIES.forEach((item) => {
+      categoryNames().forEach((item) => {
         if (!Array.from(category.options).some((option) => option.value === item)) category.add(new Option(item, item));
       });
-      if (category.value === 'Employment') category.value = 'Employment Areas';
     }
     document.querySelectorAll('option').forEach((option) => { if (option.textContent === 'Employment') { option.textContent = 'Employment Areas'; option.value = 'Employment Areas'; } });
     const button = $('exportGeojsonButton');
