@@ -11,6 +11,23 @@
     { label: '5 km cycling catchment', distance: 5.0, fill: '#6f42c1' },
     { label: '8 km cycling catchment', distance: 8.0, fill: '#d63384' },
   ];
+  const LEGACY_CATEGORY_MAP = {
+    'rail station': 'Transport - Train Station',
+    station: 'Transport - Train Station',
+    school: 'Facilities - Education',
+    education: 'Facilities - Education',
+    healthcare: 'Facilities - Medical Facility',
+    medical: 'Facilities - Medical Facility',
+    retail: 'Facilities - Retail',
+    shop: 'Facilities - Retail',
+    community: 'Facilities - Community Centre',
+    worship: 'Facilities - Place of Worship',
+    employment: 'Employment Areas',
+    'employment areas': 'Employment Areas',
+    recreation: 'Facilities - Recreation',
+    leisure: 'Facilities - Recreation',
+  };
+  const EXCLUDED_TEXT = /\b(town|village|hamlet|suburb|settlement|neighbou?rhood|locality|quarter|district|city|open space)\b/i;
   const primeConfig = () => window.PRIME_SYMBOLOGY || { categories: [], categoryNames: [] };
   const primeCategories = () => primeConfig().categories || [];
   const byCategory = () => new Map(primeCategories().map((item) => [item.primeCategory, item]));
@@ -40,6 +57,11 @@
 
   const normaliseTagValue = (value) => String(value ?? '').trim().toLowerCase();
   const getTags = (item) => ({ ...(item?.tags || {}), ...(item?.osmTags || {}), ...(item?.properties?.tags || {}), ...(item?.properties || {}) });
+  const getPostcode = (item) => {
+    const tags = getTags(item);
+    return item?.postcode || tags.postcode || tags['addr:postcode'] || tags.postal_code || tags['contact:postcode'] || '';
+  };
+  const itemText = (item) => `${item?.category || ''} ${item?.name || ''} ${item?.sourceId || ''}`.trim();
   const tagMatchesRule = (tags, rule) => Object.entries(rule).every(([key, allowed]) => {
     const value = normaliseTagValue(tags[key]);
     if (!value) return false;
@@ -50,12 +72,21 @@
     const tags = getTags(item);
     return primeCategories().find((category) => (category.osm || []).some((rule) => tagMatchesRule(tags, rule))) || null;
   };
+  const findPrimeByLegacyCategory = (item) => {
+    const key = normaliseTagValue(item?.category);
+    const mapped = LEGACY_CATEGORY_MAP[key];
+    return mapped ? byCategory().get(mapped) || null : null;
+  };
   const findPrimeByName = (item) => {
-    const text = `${item?.category || ''} ${item?.name || ''} ${item?.sourceId || ''}`.toLowerCase();
-    if (/open space|settlement|neighbou?rhood/.test(text)) return null;
+    const text = itemText(item).toLowerCase();
+    if (EXCLUDED_TEXT.test(text)) return null;
     return primeCategories().find((category) => (category.nameFallback || []).some((needle) => text.includes(String(needle).toLowerCase()))) || null;
   };
-  const classifyAmenity = (item) => findPrimeByTags(item) || findPrimeByName(item) || (item?.category === 'Employment Areas' ? byCategory().get('Employment Areas') : null);
+  const classifyAmenity = (item) => {
+    const text = itemText(item);
+    if (EXCLUDED_TEXT.test(text) && !/rail|station/i.test(text)) return null;
+    return findPrimeByTags(item) || findPrimeByLegacyCategory(item) || findPrimeByName(item) || (item?.category === 'Employment Areas' ? byCategory().get('Employment Areas') : null);
+  };
   const isTag = (item, key, value) => normaliseTagValue(getTags(item)[key]) === normaliseTagValue(value);
   const hasPrimaryPreferred = (items, category) => {
     const primary = category?.preferTags?.primary;
@@ -65,6 +96,7 @@
     const fallback = category?.preferTags?.fallback;
     return !!fallback && Object.entries(fallback).every(([key, value]) => isTag(item, key, value));
   };
+  const isRetailFallback = (item) => isTag(item, 'shop', 'convenience') || /\b(convenience|shop|store|co-op|coop|spar|nisa|premier|costcutter|one stop)\b/i.test(itemText(item));
 
   const bandEntries = (value) => {
     const text = String(value || '').replace(/\s+/g, ' ');
@@ -118,7 +150,10 @@
       }
       if (typeof MODE_CONFIG === 'object' && MODE_CONFIG) {
         MODE_CONFIG.walking.extent = 'Local destinations focus';
+        MODE_CONFIG.walking.amenityRadius = Math.max(Number(MODE_CONFIG.walking.amenityRadius || 0), 2200);
         MODE_CONFIG.walking.bands = WALKING_FALLBACKS;
+        MODE_CONFIG.cycling.extent = 'Stations, employment areas and key destinations';
+        MODE_CONFIG.cycling.amenityRadius = Math.max(Number(MODE_CONFIG.cycling.amenityRadius || 0), 8200);
         MODE_CONFIG.cycling.bands = CYCLING_FALLBACKS;
       }
       if (typeof elements === 'object' && elements) {
@@ -170,6 +205,7 @@
       item.webIcon = prime.webIcon;
       item.color = prime.colour || item.color || '#2563eb';
       item.outlineColor = prime.outlineColour || item.color;
+      item.postcode = getPostcode(item);
       item.__primeDistance = distanceMetres(site, item);
       if (!buckets.has(prime.primeCategory)) buckets.set(prime.primeCategory, []);
       buckets.get(prime.primeCategory).push(item);
@@ -192,9 +228,18 @@
         });
       }
       if (categoryName === 'Facilities - Retail') {
-        const visibleConvenience = items.filter((item) => item.visible !== false && isTag(item, 'shop', 'convenience'));
-        const visibleSupermarket = items.some((item) => item.visible !== false && isTag(item, 'shop', 'supermarket'));
-        if (visibleSupermarket && visibleConvenience.length > 1) visibleConvenience.slice(1).forEach((item) => { item.visible = false; item.showInLegend = false; });
+        const nearestRetail = items[0];
+        const nearestShop = items.find(isRetailFallback);
+        if (nearestRetail) nearestRetail.visible = nearestRetail.showInLegend = true;
+        if (nearestShop) nearestShop.visible = nearestShop.showInLegend = true;
+        let retained = 0;
+        items.forEach((item) => {
+          if (item.visible !== false) retained += 1;
+          if (retained > 2 && item !== nearestShop && item !== nearestRetail) {
+            item.visible = false;
+            item.showInLegend = false;
+          }
+        });
       }
     });
     const priority = categoryPriority();
@@ -202,6 +247,19 @@
   };
 
   const amenityGeometry = (item) => item.geometry || (Number.isFinite(Number(item.longitude)) && Number.isFinite(Number(item.latitude)) ? { type: 'Point', coordinates: [Number(item.longitude), Number(item.latitude)] } : null);
+  const walkingBand = (distance) => {
+    const d = Number(distance);
+    if (d <= 800) return '800 m preferred walking catchment';
+    if (d <= 1200) return '1,200 m walking catchment';
+    if (d <= 2000) return '2,000 m walking catchment';
+    return 'Outside default walking catchments';
+  };
+  const cyclingBand = (distance) => {
+    const d = Number(distance);
+    if (d <= 5000) return '5 km cycling catchment';
+    if (d <= 8000) return '8 km cycling catchment';
+    return 'Outside default cycling catchments';
+  };
   const exportGeojson = () => {
     try {
       normaliseAmenities();
@@ -221,6 +279,7 @@
         feature_type: item.featureType || 'point',
         source: item.source || 'OSM/manual',
         name: item.name || '',
+        postcode: getPostcode(item),
         colour: item.color,
         web_icon: item.webIcon,
         qgis_reference: byCategory().get(item.primeCategory || item.category)?.qgisSvg || null,
@@ -235,26 +294,15 @@
     }
   };
 
-  const catchmentBand = (walkingDistance, cyclingDistance) => {
-    const w = Number(walkingDistance);
-    const c = Number(cyclingDistance);
-    if (w <= 800) return '800 m preferred walking catchment';
-    if (w <= 1200) return '1,200 m walking catchment';
-    if (w <= 2000) return '2,000 m walking catchment';
-    if (c <= 5000) return '5 km cycling catchment';
-    if (c <= 8000) return '8 km cycling catchment';
-    return 'Outside default active travel catchments';
-  };
-
   const exportTaTable = () => {
     try {
       normaliseAmenities();
       const site = state?.generatedScenario?.siteCoordinates;
-      const rows = [['facility_type', 'facility_name', 'postcode', 'walking_distance_m', 'cycling_distance_m', 'catchment_band']];
+      const rows = [['facility_type', 'facility_name', 'postcode', 'walking_distance_m', 'walking_catchment_band', 'cycling_distance_m', 'cycling_catchment_band']];
       (state?.amenities || []).filter((item) => item.visible !== false).forEach((item) => {
-        const distance = Math.round(distanceMetres(site, item));
-        const cyclingDistance = Math.round(distance);
-        rows.push([item.primeCategory || item.category, item.name || '', item.postcode || getTags(item).postcode || '', distance, cyclingDistance, catchmentBand(distance, cyclingDistance)]);
+        const walkingDistance = Math.round(distanceMetres(site, item));
+        const cyclingDistance = Math.round(walkingDistance);
+        rows.push([item.primeCategory || item.category, item.name || '', getPostcode(item), walkingDistance, walkingBand(walkingDistance), cyclingDistance, cyclingBand(cyclingDistance)]);
       });
       const csv = rows.map((row) => row.map(csvEscape).join(',')).join('\n');
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
