@@ -3,10 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prime Transport Planning | Isochrone Workspace</title>
+    <title>Walking and Cycling Isochrone</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="hotfix.css" />
+    <link rel="stylesheet" href="polish.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
     <script src="app.walkcycle.v47.js?v=walkcycle-20260702" defer></script>
@@ -17,10 +18,9 @@
       <header class="site-header">
         <div>
           <p class="eyebrow">Prime Transport Planning</p>
-          <h1>Isochrone Workspace</h1>
+          <h1>Walking and Cycling Isochrone</h1>
           <p class="subtitle">
-            Internal drafting surface for accessibility plans, technical notes and
-            planning submissions.
+            Active travel network catchment
           </p>
         </div>
         <div class="header-meta">
@@ -37,7 +37,7 @@
 
       <div class="layout-grid">
         <aside class="control-rail" aria-label="Project controls">
-          <section class="rail-section project-section">
+          <section class="rail-section project-section" aria-label="Tool title">
             <div class="section-heading">
               <h2>Project Details</h2>
               <span>Default fields only</span>
@@ -71,7 +71,7 @@
                 placeholder="53.270199580110926, -2.469029559599687"
               />
             </label>
-            <label>
+            <label id="accessCoordinatesField">
               <span>Proposed access coordinates</span>
               <input
                 id="accessCoordinates"
@@ -88,7 +88,7 @@
             </p>
           </section>
 
-          <details class="rail-section advanced-panel">
+          <details class="rail-section advanced-panel" open>
             <summary>
               <span>Advanced Settings</span>
               <span class="summary-note">Collapsed by default</span>
@@ -96,21 +96,34 @@
             <div class="advanced-grid">
               <label>
                 <span>Walking bands</span>
-                <input id="walkingBands" type="text" value="1200m, 2000m" />
+                <input id="walkingBands" type="text" value="800 m, 1,600 m, 2,000 m" />
               </label>
               <label>
                 <span>Cycling bands</span>
-                <input id="cyclingBands" type="text" value="2000m, 5000m, 8000m" />
+                <input id="cyclingBands" type="text" value="5 km, 8 km" />
               </label>
+              <div class="active-display-grid">
+                <label>
+                  <span>Isochrone style</span>
+                  <select id="isochroneDisplayMode">
+                    <option value="fill">Transparent fill</option>
+                    <option value="outline">Outline only</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Opacity</span>
+                  <input id="isochroneOpacity" type="range" min="0.05" max="0.55" step="0.05" value="0.32" />
+                </label>
+              </div>
               <div class="band-colour-panel">
                 <span class="band-colour-title">Walking colours</span>
                 <div class="band-colour-grid">
                   <label class="band-colour-item">
-                    <span>1,200 m</span>
+                    <span>800 m</span>
                     <input id="walkingColor1" class="colour-input" type="color" value="#00f7ff" />
                   </label>
                   <label class="band-colour-item">
-                    <span>2,000 m</span>
+                    <span>1,600 m</span>
                     <input id="walkingColor2" class="colour-input" type="color" value="#ff0000" />
                   </label>
                 </div>
@@ -119,16 +132,12 @@
                 <span class="band-colour-title">Cycling colours</span>
                 <div class="band-colour-grid">
                   <label class="band-colour-item">
-                    <span>2,000 m</span>
+                    <span>5 km</span>
                     <input id="cyclingColor1" class="colour-input" type="color" value="#00f7ff" />
                   </label>
                   <label class="band-colour-item">
-                    <span>5,000 m</span>
+                    <span>8 km</span>
                     <input id="cyclingColor2" class="colour-input" type="color" value="#22ff00" />
-                  </label>
-                  <label class="band-colour-item">
-                    <span>8,000 m</span>
-                    <input id="cyclingColor3" class="colour-input" type="color" value="#ff0000" />
                   </label>
                 </div>
               </div>
@@ -172,14 +181,15 @@
             <div class="toolbar-block toolbar-block-export">
               <div class="section-heading">
                 <h2>Export</h2>
-                <span>Maps and schedules</span>
+                <span>CSV, GeoJSON and plan export</span>
               </div>
               <div class="export-actions">
                 <button id="exportPngButton" class="secondary-action" type="button">PNG</button>
                 <button id="exportPdfButton" class="secondary-action" type="button">PDF</button>
                 <button id="exportSvgButton" class="secondary-action" type="button">SVG</button>
                 <button id="exportCsvButton" class="secondary-action" type="button">CSV</button>
-                <button id="exportJsonButton" class="secondary-action" type="button">JSON</button>
+                <button id="exportGeojsonButton" class="secondary-action" type="button">GeoJSON</button>
+                <button id="exportJsonButton" class="secondary-action" type="button">Method JSON</button>
               </div>
               <div class="override-actions">
                 <button id="saveOverridesButton" class="ghost-action" type="button">Save amenity edits</button>
@@ -189,7 +199,7 @@
 
             <div class="toolbar-block toolbar-block-status">
               <div class="section-heading">
-                <h2>Status</h2>
+                <h2>Log</h2>
                 <span>Live preview</span>
               </div>
               <div class="status-strip" role="status" aria-live="polite">
@@ -221,7 +231,7 @@
                 </div>
                 <div>
                   <span class="meta-label">Draft extent</span>
-                  <strong id="extentLabel">Local services focus</strong>
+                  <strong id="extentLabel">Local destinations focus</strong>
                 </div>
                 <div>
                   <span class="meta-label">Legend items</span>
@@ -239,8 +249,8 @@
           <section class="editor-stage">
             <div class="panel-header">
               <div>
-                <p class="eyebrow">Amenities And Legend</p>
-                <h2>Curate what appears on the plan</h2>
+                <p class="eyebrow">Amenities</p>
+                <h2>Amenities &amp; Connections</h2>
               </div>
             </div>
 
@@ -254,24 +264,28 @@
                 />
               </label>
 
-              <div class="manual-edit-toolbar" role="group" aria-label="Manual map editing tools">
+              <div class="section-heading connection-heading">
+                <h2>Connection Controls</h2>
+                <span>Network edits</span>
+              </div>
+              <div class="manual-edit-toolbar" role="group" aria-label="Connection Controls">
                 <button class="secondary-action drawing-tool-button" id="drawWalkingPathButton" type="button" data-drawing-tool="walking-path" aria-pressed="false">
-                  Draw walking path
+                  Draw walking link
                 </button>
                 <button class="secondary-action drawing-tool-button" id="drawCyclingPathButton" type="button" data-drawing-tool="cycling-path" aria-pressed="false">
-                  Draw cycling path
+                  Draw cycling/shared link
                 </button>
                 <button class="secondary-action drawing-tool-button" id="drawSharedPathButton" type="button" data-drawing-tool="shared-path" aria-pressed="false">
-                  Draw shared walk/cycle path
+                  Draw shared link
                 </button>
                 <button class="secondary-action drawing-tool-button" id="drawBridgeLinkButton" type="button" data-drawing-tool="bridge-crossing" aria-pressed="false">
                   Draw bridge/crossing link
                 </button>
                 <button class="secondary-action drawing-tool-button" id="drawBarrierLineButton" type="button" data-drawing-tool="barrier-line" aria-pressed="false">
-                  Draw no walk/cycle barrier
+                  Draw barrier/no-access line
                 </button>
                 <button class="secondary-action drawing-tool-button" id="drawExclusionAreaButton" type="button" data-drawing-tool="exclusion-area" aria-pressed="false">
-                  Draw isochrone exclusion area
+                  Remove area
                 </button>
               </div>
 
@@ -300,10 +314,25 @@
               </div>
             </div>
 
+            <div class="section-heading amenity-controls-heading">
+              <h2>Add Amenity Controls</h2>
+              <span>Manual amenities</span>
+            </div>
+            <div class="amenity-category-checklist" aria-label="Amenities panel">
+              <strong>Amenities panel</strong>
+              <label><input type="checkbox" checked /> Rail station</label>
+              <label><input type="checkbox" checked /> School</label>
+              <label><input type="checkbox" checked /> Healthcare</label>
+              <label><input type="checkbox" checked /> Retail</label>
+              <label><input type="checkbox" checked /> Food and drink</label>
+              <label><input type="checkbox" checked /> Community</label>
+              <label><input type="checkbox" checked /> Open space</label>
+              <label><input type="checkbox" checked /> Employment Areas</label>
+            </div>
             <div class="manual-point-bar">
               <label>
                 <span>Point name</span>
-                <input id="manualPointName" type="text" value="Planned local centre" />
+                <input id="manualPointName" type="text" value="Employment area" />
               </label>
               <label>
                 <span>Category</span>
@@ -314,8 +343,15 @@
                 <select id="manualPointSymbol"></select>
               </label>
             </div>
+            <div class="amenity-action-grid" role="group" aria-label="Add Amenity Controls">
+              <button class="secondary-action" type="button">Move amenity</button>
+              <button class="secondary-action" type="button">Rename amenity</button>
+              <button class="secondary-action" type="button">Delete amenity</button>
+              <button class="secondary-action" type="button">Change category</button>
+              <button id="savePointButton" class="secondary-action" type="button">Save amenity changes</button>
+            </div>
 
-            <div class="list-panel" role="region" aria-label="Amenity legend editing list">
+            <div class="list-panel" role="region" aria-label="Amenities and Connections list">
               <div class="list-heading">
                 <h3>Amenities</h3>
                 <p>Rename, restyle, hide or remove plotted points.</p>
@@ -351,4 +387,3 @@
     </div>
   </body>
 </html>
-
